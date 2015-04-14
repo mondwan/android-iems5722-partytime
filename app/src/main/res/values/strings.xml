@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PartyTime</string>
+
+    <string name="host_button">Host</string>
+    <string name="join_button">Join</string>
+    <string name="action_settings">Settings</string>
+</resources>

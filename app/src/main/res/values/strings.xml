@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">PartyTime</string>
-
+    <!--HomeActivity-->
     <string name="host_button">Host</string>
     <string name="join_button">Join</string>
     <string name="action_settings">Settings</string>
+
+    <!--LobbyActivity-->
     <string name="title_activity_lobby">LobbyActivity</string>
+    <string name="host_ip_hint">Host IP Address</string>
+    <string name="host_ip">Loading IP Address</string>
+    <string name="action_button">ACTION</string>
 </resources>

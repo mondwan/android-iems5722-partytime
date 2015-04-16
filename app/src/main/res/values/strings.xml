@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">PartyTime</string>
     <!--HomeActivity-->
     <string name="host_button">Host</string>
@@ -10,4 +10,11 @@
     <string name="host_ip_hint">Host IP Address</string>
     <string name="host_ip">Loading IP Address</string>
     <string name="action_button">ACTION</string>
+    <string name="stopwatch_button">Stop Watch</string>
+
+    <!--StopwatchActivity-->
+    <string name="title_activity_stopwatch">StopwatchActivity</string>
+    <string name="stopwatch_title">Stopwatch</string>
+    <string name="chronometer_initial_format">Initial format:<xliff:g id="initial-format">%</xliff:g></string>
+
 </resources>

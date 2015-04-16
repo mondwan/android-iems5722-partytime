@@ -29,5 +29,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'kryonet:kryonet:2.21'
+    compile 'kryonet:kryonet-all:2.21'
 }

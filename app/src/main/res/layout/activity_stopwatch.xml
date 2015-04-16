@@ -15,7 +15,8 @@
         android:id="@+id/chronometer"
         android:layout_gravity="center_horizontal"
         android:format="@string/chronometer_initial_format"
-        android:textSize="30dp" />
+        android:textSize="100dp"
+        android:textIsSelectable="false" />
 
     <LinearLayout
         android:orientation="horizontal"

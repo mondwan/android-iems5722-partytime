@@ -9,14 +9,12 @@
         android:text="@string/stopwatch_title"
         android:id="@+id/stopwatch_title" />
 
-    <Chronometer
+    <TextView android:id="@+id/display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/chronometer"
-        android:layout_gravity="center_horizontal"
-        android:format="@string/chronometer_initial_format"
-        android:textSize="100dp"
-        android:textIsSelectable="false" />
+        android:text="00.000"
+        android:textSize="100dp">
+    </TextView>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -24,24 +22,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
-        <Button android:id="@+id/start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start">
-            <requestFocus />
-        </Button>
 
-        <Button android:id="@+id/stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop">
-        </Button>
 
-        <Button android:id="@+id/reset"
+        <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset">
-        </Button>
+            android:id="@+id/onoff"
+            android:text="ON/OFF">
+        </ToggleButton>
+
     </LinearLayout>
+
+
 
 </LinearLayout>

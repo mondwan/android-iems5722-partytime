@@ -104,6 +104,18 @@ public class HomeActivity extends Activity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        // Get a game manager reference
+        GameController gameController = GameController.getInstance();
+
+        // Stop the GameServer if it is running
+        gameController.stopGameServer();
+
+        // Let super class do rest of the stuff
+        super.onBackPressed();
+    }
+
     /**
      * Helper method gets my IP address
      *

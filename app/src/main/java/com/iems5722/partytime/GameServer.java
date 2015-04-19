@@ -1,9 +1,12 @@
 package com.iems5722.partytime;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
@@ -63,30 +66,11 @@ public class GameServer {
         this.players.add(c);
     }
 
-    // Define classes which will be transmitted back and forth in Kryonet network
-    public static class JoinHostRequest {
-        //TODO work out properties here
-    }
+    // List of ACTION_CODE for handler from GameController
+    public static final int ON_RECEIVED_MSG = 0;
+    public static final int ON_SERVER_DISCONNECTED = 1;
+    public static final int ON_CLIENT_DISCONNECTED = 2;
 
-    public static class LeaveHostRequest {
-        //TODO work out properties here
-    }
-
-    public static class GetPlayerListRequest {
-        //TODO work out properties here
-    }
-
-    public static class JoinHostResponse {
-        //TODO work out properties here
-    }
-
-    public static class UpdatePlayerListNotification {
-        //TODO work out properties here
-    }
-
-    public static class KickedNotification {
-        //TODO work out properties here
-    }
 
     protected GameServer() {
         this.players = new ArrayList<>();
@@ -102,11 +86,11 @@ public class GameServer {
     /**
      * Setup our server. Note that this implies that GameServer is running in host mode
      *
-     * @param ip string
+     * @param ip      string
+     * @param handler Handler
      * @return boolean
      */
-
-    public boolean setup(String ip) {
+    public boolean setup(String ip, final Handler handler) {
         boolean ret = true;
 
         // Save server ip
@@ -122,6 +106,37 @@ public class GameServer {
 
         // Register classes we are going to send through the network
         this.register(this.server.getKryo());
+
+        // Register a listener so that we forward received Messages to GameController
+        this.server.addListener(new Listener() {
+            public void connected(Connection c) {
+                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                Log.d(TAG, String.format("Connected IP |%s|", ipv4));
+            }
+
+            /**
+             * Handler for receiving messages from peers
+             * @param c Connection
+             * @param obj Object. Message specific
+             */
+            public void received(Connection c, Object obj) {
+                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                Log.d(TAG, String.format("Received message from ip |%s|", ipv4));
+
+                handler.obtainMessage(ON_RECEIVED_MSG, obj);
+            }
+
+            /**
+             * Handler for client disconnection
+             * @param c Connection
+             */
+            public void disconnected(Connection c) {
+                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
+
+                handler.obtainMessage(ON_CLIENT_DISCONNECTED, ipv4);
+            }
+        });
 
         try {
             // Try to occupy the ports from system
@@ -141,10 +156,11 @@ public class GameServer {
      * Connect to other GameServer. Note that this implies that GameServer is running in non-host
      * mode and this is a blocking call.
      *
-     * @param ipv4 String
+     * @param ipv4    String
+     * @param handler Handler
      * @return boolean
      */
-    public boolean connect(String ipv4) {
+    public boolean connect(String ipv4, final Handler handler) {
         boolean ret = true;
 
         Log.d(TAG, String.format("Connecting to GameServer with ip |%s|...", ipv4));
@@ -161,6 +177,32 @@ public class GameServer {
 
             // Register classes we are going to send through the network
             this.register(this.client.getKryo());
+
+            // Register a listener so that we forward received Messages to GameController
+            this.client.addListener(new Listener() {
+                /**
+                 * Handler for receiving messages from peers
+                 * @param c Connection
+                 * @param obj Object. Message specific
+                 */
+                public void received(Connection c, Object obj) {
+                    String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                    Log.d(TAG, String.format("Received message from ip |%s|", ipv4));
+
+                    handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                }
+
+                /**
+                 * Handler for server disconnection
+                 * @param c Connection
+                 */
+                public void disconnected(Connection c) {
+                    String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                    Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
+
+                    handler.obtainMessage(ON_SERVER_DISCONNECTED);
+                }
+            });
 
             // Try to connect to given ipv4 with 5000 secs timeout
             this.client.connect(5000, ipv4, tcpPort, udpPort);
@@ -197,11 +239,12 @@ public class GameServer {
      * @param instance Kryo
      */
     protected void register(Kryo instance) {
-        instance.register(JoinHostRequest.class);
-        instance.register(LeaveHostRequest.class);
-        instance.register(GetPlayerListRequest.class);
-        instance.register(JoinHostResponse.class);
-        instance.register(UpdatePlayerListNotification.class);
-        instance.register(KickedNotification.class);
+        instance.register(GameController.JoinHostRequest.class);
+        instance.register(GameController.LeaveHostRequest.class);
+        instance.register(GameController.GetPlayerListRequest.class);
+        instance.register(GameController.JoinHostResponse.class);
+        instance.register(GameController.UpdatePlayerListNotification.class);
+        instance.register(GameController.KickedNotification.class);
+        instance.register(GameController.ServerDownNotification.class);
     }
 }

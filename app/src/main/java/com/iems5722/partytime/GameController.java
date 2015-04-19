@@ -31,11 +31,11 @@ public class GameController {
     // Define MAX_PLAYERS
     public static final int MAX_PLAYERS = 4;
 
-    // Predefine usernames
-    protected ArrayList<String> usernames = null;
+    // Predefine list of username
+    protected ArrayList<String> listOfUsername = null;
 
     // Predefine player icon resources
-    protected ArrayList<Integer> playerIconResouce = null;
+    protected ArrayList<Integer> playerIconResource = null;
 
     // Thread pool for communications
     protected final ThreadPoolExecutor networkCallsThreadPool;
@@ -64,18 +64,18 @@ public class GameController {
         this.gs = GameServer.getInstance();
 
         // Hard code list of username
-        this.usernames = new ArrayList<>();
-        this.usernames.add("勇者仁傑");
-        this.usernames.add("法師歌莉");
-        this.usernames.add("舞者結他他");
-        this.usernames.add("八神太一");
+        this.listOfUsername = new ArrayList<>();
+        this.listOfUsername.add("勇者仁傑");
+        this.listOfUsername.add("法師歌莉");
+        this.listOfUsername.add("舞者結他他");
+        this.listOfUsername.add("八神太一");
 
         // Hard code list of image resource
-        this.playerIconResouce = new ArrayList<>();
-        this.playerIconResouce.add(R.mipmap.p1_icon);
-        this.playerIconResouce.add(R.mipmap.p2_icon);
-        this.playerIconResouce.add(R.mipmap.p3_icon);
-        this.playerIconResouce.add(R.mipmap.p4_icon);
+        this.playerIconResource = new ArrayList<>();
+        this.playerIconResource.add(R.mipmap.p1_icon);
+        this.playerIconResource.add(R.mipmap.p2_icon);
+        this.playerIconResource.add(R.mipmap.p3_icon);
+        this.playerIconResource.add(R.mipmap.p4_icon);
 
         // Instantiate thread pool for network calls
         // Define timeunit to be seconds
@@ -207,7 +207,7 @@ public class GameController {
 
         // Fetching username
         int index = players.size();
-        String username = this.usernames.get(index);
+        String username = this.listOfUsername.get(index);
 
         // Instantiating GameClient
         GamePlayer ret = new GamePlayer(ipv4, username);
@@ -232,13 +232,13 @@ public class GameController {
     public int getPlayerIconResource(String username) {
         int ret;
 
-        int index = this.usernames.indexOf(username);
+        int index = this.listOfUsername.indexOf(username);
 
         if (index == -1) {
             Log.e(TAG, String.format("Username |%s| cannot map to resource id", username));
-            ret = this.playerIconResouce.get(this.playerIconResouce.size() - 1);
+            ret = this.playerIconResource.get(this.playerIconResource.size() - 1);
         } else {
-            ret = this.playerIconResouce.get(index);
+            ret = this.playerIconResource.get(index);
         }
 
         return ret;

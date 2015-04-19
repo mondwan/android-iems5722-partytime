@@ -2,6 +2,8 @@ package com.iems5722.partytime;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,11 +19,16 @@ import java.util.regex.Pattern;
 public class JoinHostActivity extends Activity {
     private static final String TAG = JoinHostActivity.class.getClass().getSimpleName();
 
+    // View references
     protected TextView statusText = null;
     protected EditText hostIPInputBox = null;
     protected Button joinHostButton = null;
 
+    // GameController
     protected GameController gameController = null;
+
+    // Handler reference
+    protected Handler mHandler = null;
 
     protected class InvalidIPV4Exception extends Exception {
     }
@@ -64,6 +71,33 @@ public class JoinHostActivity extends Activity {
                 self.connectToGameServer(ipv4);
             }
         });
+
+        // Define Handler
+        if (this.mHandler == null) {
+            this.mHandler = new Handler() {
+                /**
+                 * Defines the operations to perform when this activity receives a new Message from the
+                 * GameController.
+                 *
+                 * @param inputMessage Message
+                 */
+                @Override
+                public void handleMessage(Message inputMessage) {
+                    try {
+                        switch (inputMessage.what) {
+                            case GameController.CONNECT_GAMESERVER_SUCCESS:
+                                // NO OPT YET
+                            default:
+                                throw new FailToConnectToGameServerException();
+                        }
+                    } catch (FailToConnectToGameServerException e) {
+                        self.statusText.setText(R.string.status_connect_failure);
+                        self.hostIPInputBox.setEnabled(true);
+                        self.joinHostButton.setEnabled(true);
+                    }
+                }
+            };
+        }
     }
 
     /**
@@ -88,17 +122,10 @@ public class JoinHostActivity extends Activity {
                 throw new InvalidIPV4Exception();
             }
 
-            boolean res = this.gameController.connectToGameServer(ipv4);
-
-            if (!res) {
-                throw new FailToConnectToGameServerException();
-            }
+            // Async call
+            this.gameController.connectToGameServer(ipv4, this.mHandler);
         } catch (InvalidIPV4Exception e) {
             this.statusText.setText(R.string.status_invalid_ipv4);
-            this.hostIPInputBox.setEnabled(true);
-            this.joinHostButton.setEnabled(true);
-        } catch (FailToConnectToGameServerException e) {
-            this.statusText.setText(R.string.status_connect_failure);
             this.hostIPInputBox.setEnabled(true);
             this.joinHostButton.setEnabled(true);
         }

@@ -1,8 +1,14 @@
 package com.iems5722.partytime;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Middle man between GameServer and Activity.
@@ -23,13 +29,32 @@ public class GameController {
     protected boolean isGameServerActive = false;
 
     // Define MAX_PLAYERS
-    public static int MAX_PLAYERS = 4;
+    public static final int MAX_PLAYERS = 4;
 
     // Predefine usernames
     protected ArrayList<String> usernames = null;
 
     // Predefine player icon resources
     protected ArrayList<Integer> playerIconResouce = null;
+
+    // Thread pool for communications
+    protected final ThreadPoolExecutor networkCallsThreadPool;
+
+    // Communication work queue
+    protected final BlockingQueue<Runnable> networkCallsQueue;
+
+    // Define # of cores
+    protected static final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
+    // Sets the amount of time an idle thread will wait for a task before terminating
+    protected static final int KEEP_ALIVE_TIME = 1;
+
+    // Sets the Time Unit to seconds
+    protected final TimeUnit KEEP_ALIVE_TIME_UNIT;
+
+    // Define list of ACTION_CODE for android.os.handler
+    public static final int CONNECT_GAMESERVER_FAIL = -1;
+    public static final int CONNECT_GAMESERVER_SUCCESS = 0;
 
     /**
      * Singleton implementation
@@ -51,6 +76,22 @@ public class GameController {
         this.playerIconResouce.add(R.mipmap.p2_icon);
         this.playerIconResouce.add(R.mipmap.p3_icon);
         this.playerIconResouce.add(R.mipmap.p4_icon);
+
+        // Instantiate thread pool for network calls
+        // Define timeunit to be seconds
+        this.KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+
+        // Instantiate networkCallsQueue
+        this.networkCallsQueue = new LinkedBlockingQueue<>();
+
+        // Instantiate a thread pool
+        this.networkCallsThreadPool = new ThreadPoolExecutor(
+                NUMBER_OF_CORES,
+                NUMBER_OF_CORES,
+                KEEP_ALIVE_TIME,
+                KEEP_ALIVE_TIME_UNIT,
+                this.networkCallsQueue
+        );
     }
 
     /**
@@ -79,9 +120,6 @@ public class GameController {
             // Active gameServer
             this.isGameServerActive = true;
 
-            // Define gameServer to be host
-            this.gs.setHost(true);
-
             // Server is also a player...
             GameClient p = this.createGameClient(ipv4);
 
@@ -93,15 +131,40 @@ public class GameController {
     }
 
     /**
-     * API for activities connect to the GameServer. Note that this method implies the caller is
-     * not the host of the gameServer
+     * API for activities connect to the GameServer.
+     * <p/>
+     * Note that this method implies the caller is not the host of the gameServer and this is an
+     * ASYNC call. Therefore, caller must be provided a handler for GameController to reply the
+     * status of connection
      *
-     * @param ipv4 String
-     * @return boolean
+     * @param ipv4    final String
+     * @param handler final Handler
      */
-    public boolean connectToGameServer(String ipv4) {
-        //TODO: write codes for connection
-        return false;
+    public void connectToGameServer(final String ipv4, final Handler handler) {
+        final GameController self = GameController.this;
+
+        this.networkCallsThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Connect to given ipv4
+                boolean ret = self.gs.connect(ipv4);
+                Message msg;
+
+                // Determine the status of the connection
+                if (ret) {
+                    // Able to connect to ipv4
+                    self.isGameServerActive = true;
+                    msg = handler.obtainMessage(CONNECT_GAMESERVER_SUCCESS);
+                } else {
+                    // Unable to connect to ipv4
+                    self.isGameServerActive = false;
+                    msg = handler.obtainMessage(CONNECT_GAMESERVER_FAIL);
+                }
+
+                // Send message back to the caller activity
+                msg.sendToTarget();
+            }
+        });
     }
 
     /**

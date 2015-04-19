@@ -4,18 +4,42 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class LobbyActivity extends Activity {
     private static final String TAG = LobbyActivity.class.getClass().getSimpleName();
+
+    protected Button startButton = null;
+    protected TextView hostIP = null;
+    protected ListView playerList = null;
+
+    protected GameController gameController = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
+        // Setup reference for our properties
+        this.startButton = (Button) this.findViewById(R.id.startButton);
+        this.hostIP = (TextView) this.findViewById(R.id.hostIP);
+        this.playerList = (ListView) this.findViewById(R.id.playerList);
 
+        this.gameController = GameController.getInstance();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Write Server IP
+        String ipv4 = this.gameController.getServerIP();
+        this.hostIP.setText(ipv4);
+    }
+
 
     @Override
     public void onBackPressed() {

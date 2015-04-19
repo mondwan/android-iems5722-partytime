@@ -87,6 +87,28 @@ public class GameController {
     }
 
     /**
+     * API for activity fetching IP of the GameServer
+     *
+     * @return String
+     */
+    public String getServerIP() {
+        String ret = this.gs.getServerIP();
+
+        return ret;
+    }
+
+    /**
+     * API for activity fetching whether we are the of the GameServer or not
+     *
+     * @return boolean
+     */
+    public boolean isHost() {
+        boolean ret = this.gs.isHost();
+
+        return ret;
+    }
+
+    /**
      * API which creates a GameClient for GameServer
      *
      * @param ipv4 String

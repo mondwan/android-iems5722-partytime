@@ -59,11 +59,11 @@ public class HomeActivity extends Activity {
                     String ip = self.getMyIP();
                     Log.d(TAG, String.format("My IP address |%s|", ip));
 
-                    // Get a game server reference
-                    GameServer gameServer = GameServer.getInstance();
+                    // Get a game manager reference
+                    GameController gameController = GameController.getInstance();
 
                     // Setup a game server with IP
-                    boolean res = gameServer.setup(ip);
+                    boolean res = gameController.createGameServer(ip);
 
                     // Make sure there are no errors for setting up a server
                     if (!res) {

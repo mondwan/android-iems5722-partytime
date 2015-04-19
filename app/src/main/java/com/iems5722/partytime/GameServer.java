@@ -30,7 +30,7 @@ public class GameServer {
     // Define a list for holding GameClient
     protected ArrayList<GameClient> players = null;
 
-    // Reference for kryonet server
+    // Reference for Kryonet server
     protected Server server;
 
     // List of getters and setters
@@ -58,8 +58,12 @@ public class GameServer {
         return udpPort;
     }
 
+    public void addPlayer(GameClient c) {
+        this.players.add(c);
+    }
+
     protected GameServer() {
-        // No op
+        this.players = new ArrayList<GameClient>();
     }
 
     public static GameServer getInstance() {
@@ -84,16 +88,7 @@ public class GameServer {
 
         Log.d(TAG, String.format("Setup server with ip |%s|...", ip));
 
-        // Setup game clients
-        this.players = new ArrayList<GameClient>();
-
-        // Server is also a player...
-        GameClient p = new GameClient(ip, "勇者仁傑");
-
-        // Append server to player list
-        this.players.add(p);
-
-        // Instantiate kryonet server
+        // Instantiate Kryonet server
         this.server = new Server();
 
         // TODO: initialize kryonet server

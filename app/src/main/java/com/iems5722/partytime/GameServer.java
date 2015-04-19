@@ -74,7 +74,7 @@ public class GameServer {
     }
 
     /**
-     * Setup our server. Note that this implies GameServer are running in host mode
+     * Setup our server. Note that this implies that GameServer is running in host mode
      *
      * @param ip string
      * @return boolean
@@ -107,8 +107,8 @@ public class GameServer {
     }
 
     /**
-     * Connect to other GameServer. Note that this implies GameServer are running in non-host mode
-     * and this is a blocking call.
+     * Connect to other GameServer. Note that this implies that GameServer is running in non-host
+     * mode and this is a blocking call.
      *
      * @param ipv4 String
      * @return boolean

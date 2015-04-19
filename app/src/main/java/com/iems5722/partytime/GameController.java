@@ -121,7 +121,7 @@ public class GameController {
             this.isGameServerActive = true;
 
             // Server is also a player...
-            GameClient p = this.createGameClient(ipv4);
+            GamePlayer p = this.createGameClient(ipv4);
 
             // Append server to player list
             this.gs.addPlayer(p);
@@ -201,16 +201,16 @@ public class GameController {
      * @param ipv4 String
      * @return GameClient
      */
-    public GameClient createGameClient(String ipv4) {
+    public GamePlayer createGameClient(String ipv4) {
         // Get list of players currently
-        ArrayList<GameClient> players = this.gs.getPlayers();
+        ArrayList<GamePlayer> players = this.gs.getPlayers();
 
         // Fetching username
         int index = players.size();
         String username = this.usernames.get(index);
 
         // Instantiating GameClient
-        GameClient ret = new GameClient(ipv4, username);
+        GamePlayer ret = new GamePlayer(ipv4, username);
         return ret;
     }
 
@@ -219,7 +219,7 @@ public class GameController {
      *
      * @return ArrayList\<GameClient\>
      */
-    public ArrayList<GameClient> getPlayerList() {
+    public ArrayList<GamePlayer> getPlayerList() {
         return this.gs.getPlayers();
     }
 

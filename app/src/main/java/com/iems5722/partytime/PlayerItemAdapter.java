@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * An adapter handles how to fetch data from GameClient and render them as a row in ListView
  */
-public class PlayerItemAdapter extends ArrayAdapter<GameClient> {
-    public PlayerItemAdapter(Context context, int resource, List<GameClient> players) {
+public class PlayerItemAdapter extends ArrayAdapter<GamePlayer> {
+    public PlayerItemAdapter(Context context, int resource, List<GamePlayer> players) {
         super(context, resource, players);
     }
 
@@ -38,7 +38,7 @@ public class PlayerItemAdapter extends ArrayAdapter<GameClient> {
         }
 
         // Get the GameClient reference
-        GameClient player = this.getItem(pos);
+        GamePlayer player = this.getItem(pos);
 
         // Get View Reference
         TextView playerIP = (TextView) convertView.findViewById(

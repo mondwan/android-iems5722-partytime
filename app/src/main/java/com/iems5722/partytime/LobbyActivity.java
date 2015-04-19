@@ -42,7 +42,7 @@ public class LobbyActivity extends Activity {
         this.hostIP.setText(ipv4);
 
         // Update player list by linking up with GameServer players and our adapter
-        ArrayList<GameClient> players = this.gameController.getPlayerList();
+        ArrayList<GamePlayer> players = this.gameController.getPlayerList();
         this.playerList.setAdapter(
                 new PlayerItemAdapter(
                         this, R.layout.player_row_view, players

@@ -3,7 +3,7 @@ package com.iems5722.partytime;
 /**
  * A class holds information about a player
  */
-public class GameClient {
+public class GamePlayer {
     protected String username;
     protected String ip;
 
@@ -15,7 +15,7 @@ public class GameClient {
         return ip;
     }
 
-    public GameClient(String ip, String username) {
+    public GamePlayer(String ip, String username) {
         this.ip = ip;
         this.username = username;
     }

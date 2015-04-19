@@ -29,7 +29,7 @@ public class GameServer {
     protected boolean isHost = false;
 
     // Define a list for holding GameClient
-    protected ArrayList<GameClient> players = null;
+    protected ArrayList<GamePlayer> players = null;
 
     // Reference for Kryonet server
     protected Server server;
@@ -42,7 +42,7 @@ public class GameServer {
         return this.isHost;
     }
 
-    public ArrayList<GameClient> getPlayers() {
+    public ArrayList<GamePlayer> getPlayers() {
         return players;
     }
 
@@ -58,7 +58,7 @@ public class GameServer {
         return udpPort;
     }
 
-    public void addPlayer(GameClient c) {
+    public void addPlayer(GamePlayer c) {
         this.players.add(c);
     }
 

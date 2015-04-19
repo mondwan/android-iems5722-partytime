@@ -85,10 +85,12 @@ public class JoinHostActivity extends Activity {
                 public void handleMessage(Message inputMessage) {
                     try {
                         switch (inputMessage.what) {
-                            case GameController.CONNECT_GAMESERVER_SUCCESS:
-                                // NO OPT YET
-                            default:
-                                throw new FailToConnectToGameServerException();
+                            case GameController.JOIN_HOST_RESPONSE:
+                                GameController.JoinHostResponse
+                                        obj = (GameController.JoinHostResponse) inputMessage.obj;
+                                if (!obj.isSuccess) {
+                                    throw new FailToConnectToGameServerException();
+                                }
                         }
                     } catch (FailToConnectToGameServerException e) {
                         self.statusText.setText(R.string.status_connect_failure);

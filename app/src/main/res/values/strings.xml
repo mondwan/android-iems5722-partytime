@@ -15,6 +15,7 @@
     <!--StopwatchActivity-->
     <string name="title_activity_stopwatch">StopwatchActivity</string>
     <string name="stopwatch_title">Stopwatch</string>
+    <string name="game_rule">Game Rule:</string>
 
     <!--JoinHostActivity-->
     <string name="title_activity_join_host">JoinHostActivity</string>

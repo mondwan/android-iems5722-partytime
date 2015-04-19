@@ -9,6 +9,13 @@
         android:text="@string/stopwatch_title"
         android:id="@+id/stopwatch_title" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/game_rule"
+        android:id="@+id/game_rule"
+        android:textSize="25dp" />
+
     <TextView android:id="@+id/display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,13 +30,18 @@
         android:layout_gravity="center_horizontal">
 
 
-
         <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/onoff"
             android:text="ON/OFF">
         </ToggleButton>
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="STOP"-->
+            <!--android:id="@+id/stop" />-->
 
     </LinearLayout>
 

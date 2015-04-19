@@ -125,11 +125,13 @@ public class JoinHostActivity extends Activity {
             }
 
             // Async call
-            this.gameController.connectToGameServer(ipv4, this.mHandler);
+            this.gameController.registerHandler(this.mHandler);
+            this.gameController.connectToGameServer(ipv4);
         } catch (InvalidIPV4Exception e) {
             this.statusText.setText(R.string.status_invalid_ipv4);
             this.hostIPInputBox.setEnabled(true);
             this.joinHostButton.setEnabled(true);
+            this.gameController.cancelHandler();
         }
     }
 

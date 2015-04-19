@@ -113,32 +113,34 @@ public class GameController {
             @Override
             public void handleMessage(Message inputMessage) {
                 Object obj = inputMessage.obj;
-                switch (inputMessage.what) {
-                    case GameServer.ON_CLIENT_DISCONNECTED:
-                        if (obj instanceof UpdatePlayerListNotification) {
-                            activityHandler.obtainMessage(UPDATE_PLAYER_LIST_NOTIFICATION, obj);
-                        }
-                        break;
-                    case GameServer.ON_SERVER_DISCONNECTED:
-                        if (obj instanceof ServerDownNotification) {
-                            activityHandler.obtainMessage(SERVER_DOWN_NOTFICATION, obj);
-                        }
-                        break;
-                    case GameServer.ON_RECEIVED_MSG:
-                        if (obj instanceof JoinHostRequest) {
-                            activityHandler.obtainMessage(JOIN_HOST_REQUEST, obj);
-                        } else if (obj instanceof LeaveHostRequest) {
-                            activityHandler.obtainMessage(LEAVE_HOST_REQUEST, obj);
-                        } else if (obj instanceof GetPlayerListRequest) {
-                            activityHandler.obtainMessage(GET_PLAYER_LIST_REQUEST, obj);
-                        } else if (obj instanceof JoinHostResponse) {
-                            activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
-                        } else if (obj instanceof UpdatePlayerListNotification) {
-                            activityHandler.obtainMessage(UPDATE_PLAYER_LIST_NOTIFICATION, obj);
-                        } else if (obj instanceof KickedNotification) {
-                            activityHandler.obtainMessage(KICKED_NOTIFICATION, obj);
-                        }
-                        break;
+                if (activityHandler != null) {
+                    switch (inputMessage.what) {
+                        case GameServer.ON_CLIENT_DISCONNECTED:
+                            if (obj instanceof UpdatePlayerListNotification) {
+                                activityHandler.obtainMessage(UPDATE_PLAYER_LIST_NOTIFICATION, obj);
+                            }
+                            break;
+                        case GameServer.ON_SERVER_DISCONNECTED:
+                            if (obj instanceof ServerDownNotification) {
+                                activityHandler.obtainMessage(SERVER_DOWN_NOTFICATION, obj);
+                            }
+                            break;
+                        case GameServer.ON_RECEIVED_MSG:
+                            if (obj instanceof JoinHostRequest) {
+                                activityHandler.obtainMessage(JOIN_HOST_REQUEST, obj);
+                            } else if (obj instanceof LeaveHostRequest) {
+                                activityHandler.obtainMessage(LEAVE_HOST_REQUEST, obj);
+                            } else if (obj instanceof GetPlayerListRequest) {
+                                activityHandler.obtainMessage(GET_PLAYER_LIST_REQUEST, obj);
+                            } else if (obj instanceof JoinHostResponse) {
+                                activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
+                            } else if (obj instanceof UpdatePlayerListNotification) {
+                                activityHandler.obtainMessage(UPDATE_PLAYER_LIST_NOTIFICATION, obj);
+                            } else if (obj instanceof KickedNotification) {
+                                activityHandler.obtainMessage(KICKED_NOTIFICATION, obj);
+                            }
+                            break;
+                    }
                 }
             }
         };
@@ -220,12 +222,10 @@ public class GameController {
      * ASYNC call. Therefore, caller must be provided a handler for GameController to reply the
      * status of connection
      *
-     * @param ipv4    final String
-     * @param handler final Handler
+     * @param ipv4 final String
      */
-    public void connectToGameServer(final String ipv4, final Handler handler) {
+    public void connectToGameServer(final String ipv4) {
         final GameController self = GameController.this;
-        this.activityHandler = handler;
 
         this.networkCallsThreadPool.execute(new Runnable() {
             @Override
@@ -268,6 +268,7 @@ public class GameController {
         if (this.isGameServerActive) {
             this.isGameServerActive = false;
             this.gs.stop();
+            this.cancelHandler();
         }
     }
 
@@ -287,6 +288,22 @@ public class GameController {
      */
     public void setLocalIP(String ipv4) {
         this.localIP = ipv4;
+    }
+
+    /**
+     * API for activities register the handler
+     *
+     * @param handler Handler
+     */
+    public void registerHandler(Handler handler) {
+        this.activityHandler = handler;
+    }
+
+    /**
+     * API for activities cancel the handler
+     */
+    public void cancelHandler() {
+        this.activityHandler = null;
     }
 
     /**

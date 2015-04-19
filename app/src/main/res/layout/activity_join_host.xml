@@ -22,19 +22,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/hostIP"
-        android:text="@string/host_ip_enter"
+        android:hint="@string/host_ip_enter"
         android:layout_below="@+id/hostIPHint"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
-        android:inputType="numberDecimal"/>
+        android:imeOptions="actionDone"
+        android:inputType="phone"
+        android:focusable="true"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/join_host_button"
-        android:id="@+id/button"
-        android:layout_marginTop="71dp"
+        android:id="@+id/joinHostButton"
         android:layout_below="@+id/hostIP"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/statusText"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/joinHostButton"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

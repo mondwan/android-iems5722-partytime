@@ -20,4 +20,7 @@
     <string name="title_activity_join_host">JoinHostActivity</string>
     <string name="host_ip_enter">Enter Host IP here</string>
     <string name="join_host_button">Join!</string>
+    <string name="status_connecting">Connecting to the server. Please wait</string>
+    <string name="status_connect_failure">Unable to connect given host. Please try again</string>
+    <string name="status_invalid_ipv4">Invalid IPV4. Please try again</string>
 </resources>

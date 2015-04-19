@@ -93,6 +93,18 @@ public class GameController {
     }
 
     /**
+     * API for activities connect to the GameServer. Note that this method implies the caller is
+     * not the host of the gameServer
+     *
+     * @param ipv4 String
+     * @return boolean
+     */
+    public boolean connectToGameServer(String ipv4) {
+        //TODO: write codes for connection
+        return false;
+    }
+
+    /**
      * API for closing the GameServer
      */
     public void stopGameServer() {

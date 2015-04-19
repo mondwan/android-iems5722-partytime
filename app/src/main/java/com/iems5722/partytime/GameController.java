@@ -15,6 +15,9 @@ public class GameController {
     // Reference for the game server
     protected GameServer gs;
 
+    // Determine whether server is active or not
+    protected boolean isGameServerActive = false;
+
     // Define MAX_PLAYERS
     protected int MAX_PLAYERS = 4;
 
@@ -58,6 +61,12 @@ public class GameController {
     public boolean createGameServer(String ipv4) {
         boolean ret = this.gs.setup(ipv4);
 
+        // Active gameServer
+        this.isGameServerActive = true;
+
+        // Define gameServer to be host
+        this.gs.setHost(true);
+
         // Server is also a player...
         GameClient p = this.createGameClient(ipv4);
 
@@ -65,6 +74,16 @@ public class GameController {
         this.gs.addPlayer(p);
 
         return ret;
+    }
+
+    /**
+     * API for closing the GameServer
+     */
+    public void stopGameServer() {
+        if (this.isGameServerActive) {
+            this.isGameServerActive = false;
+            this.gs.stop();
+        }
     }
 
     /**

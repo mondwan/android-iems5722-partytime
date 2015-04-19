@@ -9,5 +9,5 @@
     <string name="title_activity_lobby">LobbyActivity</string>
     <string name="host_ip_hint">Host IP Address</string>
     <string name="host_ip">Loading IP Address</string>
-    <string name="action_button">ACTION</string>
+    <string name="start_button">START</string>
 </resources>

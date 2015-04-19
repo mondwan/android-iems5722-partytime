@@ -11,11 +11,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/action_button"
-        android:id="@+id/actionButton"
+        android:text="@string/start_button"
+        android:id="@+id/startButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:enabled="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,8 +27,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/actionButton"
-        android:layout_toStartOf="@+id/actionButton"/>
+        android:layout_toLeftOf="@+id/startButton"
+        android:layout_toStartOf="@+id/startButton"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,9 +39,9 @@
         android:layout_below="@+id/hostIPHint"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/actionButton"
-        android:layout_toStartOf="@+id/actionButton"
-        android:layout_alignBottom="@+id/actionButton"/>
+        android:layout_toLeftOf="@+id/startButton"
+        android:layout_toStartOf="@+id/startButton"
+        android:layout_alignBottom="@+id/startButton"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -49,7 +50,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/actionButton"
+        android:layout_below="@+id/startButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 

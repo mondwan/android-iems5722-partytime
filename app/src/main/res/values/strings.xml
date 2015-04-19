@@ -15,4 +15,9 @@
     <!--StopwatchActivity-->
     <string name="title_activity_stopwatch">StopwatchActivity</string>
     <string name="stopwatch_title">Stopwatch</string>
+
+    <!--JoinHostActivity-->
+    <string name="title_activity_join_host">JoinHostActivity</string>
+    <string name="host_ip_enter">Enter Host IP here</string>
+    <string name="join_host_button">Join!</string>
 </resources>

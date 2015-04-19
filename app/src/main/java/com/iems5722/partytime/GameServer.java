@@ -63,7 +63,7 @@ public class GameServer {
     }
 
     protected GameServer() {
-        this.players = new ArrayList<GameClient>();
+        this.players = new ArrayList<>();
     }
 
     public static GameServer getInstance() {
@@ -102,5 +102,20 @@ public class GameServer {
         }
 
         return ret;
+    }
+
+    /**
+     * Close our server
+     */
+    public void stop() {
+        boolean ret = true;
+
+        Log.d(TAG, "Close game server...");
+
+        // Stop the Kryonet server
+        this.server.stop();
+
+        // Empty list of players
+        this.players.clear();
     }
 }

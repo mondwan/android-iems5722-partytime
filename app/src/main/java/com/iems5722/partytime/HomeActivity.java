@@ -99,8 +99,11 @@ public class HomeActivity extends Activity {
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: jump to join activity
                 Log.d(TAG, "join button clicked");
+
+                // Go to JoinHostActivity
+                Intent intent = new Intent(HomeActivity.this, JoinHostActivity.class);
+                startActivity(intent);
             }
         });
         stopwatchButton.setOnClickListener(new View.OnClickListener() {

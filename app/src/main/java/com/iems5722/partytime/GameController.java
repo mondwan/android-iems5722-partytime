@@ -66,8 +66,8 @@ public class GameController {
     }
 
     /**
-     * API for activities creates and initialize GamerServer This method implies the caller to be
-     * the host of the gameServer
+     * API for activities create and initialize GamerServer. Note that this method implies the
+     * caller to be the host of the gameServer
      *
      * @param ipv4 string
      * @return boolean
@@ -75,17 +75,19 @@ public class GameController {
     public boolean createGameServer(String ipv4) {
         boolean ret = this.gs.setup(ipv4);
 
-        // Active gameServer
-        this.isGameServerActive = true;
+        if (ret) {
+            // Active gameServer
+            this.isGameServerActive = true;
 
-        // Define gameServer to be host
-        this.gs.setHost(true);
+            // Define gameServer to be host
+            this.gs.setHost(true);
 
-        // Server is also a player...
-        GameClient p = this.createGameClient(ipv4);
+            // Server is also a player...
+            GameClient p = this.createGameClient(ipv4);
 
-        // Append server to player list
-        this.gs.addPlayer(p);
+            // Append server to player list
+            this.gs.addPlayer(p);
+        }
 
         return ret;
     }

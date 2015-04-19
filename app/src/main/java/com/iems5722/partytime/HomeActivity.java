@@ -41,6 +41,7 @@ public class HomeActivity extends Activity {
         // Get references for the buttons
         Button hostButton = (Button) this.findViewById(R.id.hostButton);
         Button joinButton = (Button) this.findViewById(R.id.joinButton);
+        Button stopwatchButton = (Button) this.findViewById(R.id.stopwatchButton);
 
         // Setup onclick listener for those buttons
         hostButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +101,14 @@ public class HomeActivity extends Activity {
             public void onClick(View v) {
                 // TODO: jump to join activity
                 Log.d(TAG, "join button clicked");
+            }
+        });
+        stopwatchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, StopwatchActivity.class);
+                Log.d(TAG, "stopwatch button clicked");
+                startActivity(intent);
             }
         });
     }

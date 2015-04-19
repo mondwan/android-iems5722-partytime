@@ -29,6 +29,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.iems5722.partytime.HomeActivity"/>
         </activity>
+        <activity
+            android:name=".StopwatchActivity"
+            android:label="@string/title_activity_stopwatch"
+            android:parentActivityName=".HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.iems5722.partytime.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

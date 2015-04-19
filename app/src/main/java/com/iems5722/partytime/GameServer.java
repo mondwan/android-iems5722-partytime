@@ -2,6 +2,7 @@ package com.iems5722.partytime;
 
 import android.util.Log;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
 
@@ -62,6 +63,31 @@ public class GameServer {
         this.players.add(c);
     }
 
+    // Define classes which will be transmitted back and forth in Kryonet network
+    public static class JoinHostRequest {
+        //TODO work out properties here
+    }
+
+    public static class LeaveHostRequest {
+        //TODO work out properties here
+    }
+
+    public static class GetPlayerListRequest {
+        //TODO work out properties here
+    }
+
+    public static class JoinHostResponse {
+        //TODO work out properties here
+    }
+
+    public static class UpdatePlayerListNotification {
+        //TODO work out properties here
+    }
+
+    public static class KickedNotification {
+        //TODO work out properties here
+    }
+
     protected GameServer() {
         this.players = new ArrayList<>();
     }
@@ -91,12 +117,17 @@ public class GameServer {
         // Instantiate Kryonet server
         this.server = new Server();
 
+        // Define we are running as Host of the GameServer
         this.isHost = true;
 
-        // TODO: initialize kryonet server
+        // Register classes we are going to send through the network
+        this.register(this.server.getKryo());
 
         try {
-            this.server.bind(this.getTcpPort(), this.getUdpPort());
+            // Try to occupy the ports from system
+            this.server.bind(tcpPort, udpPort);
+
+            // It create a thread for itself to keep calling update() internally
             this.server.start();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
@@ -121,11 +152,17 @@ public class GameServer {
         // Instantiate Kryonet Client
         this.client = new Client();
 
+        // Define we are running as client of the GameServer
         this.isHost = false;
 
         try {
+            // It create a thread for itself to keep calling update() internally
             this.client.start();
-            // TODO: initialize kryonet client
+
+            // Register classes we are going to send through the network
+            this.register(this.client.getKryo());
+
+            // Try to connect to given ipv4 with 5000 secs timeout
             this.client.connect(5000, ipv4, tcpPort, udpPort);
 
             Log.d(TAG, String.format("Able to connect to GameServer with ip |%s|", ipv4));
@@ -152,5 +189,19 @@ public class GameServer {
 
         // Empty list of players
         this.players.clear();
+    }
+
+    /**
+     * A method registers all classes which be sent over the Kryonet network
+     *
+     * @param instance Kryo
+     */
+    protected void register(Kryo instance) {
+        instance.register(JoinHostRequest.class);
+        instance.register(LeaveHostRequest.class);
+        instance.register(GetPlayerListRequest.class);
+        instance.register(JoinHostResponse.class);
+        instance.register(UpdatePlayerListNotification.class);
+        instance.register(KickedNotification.class);
     }
 }

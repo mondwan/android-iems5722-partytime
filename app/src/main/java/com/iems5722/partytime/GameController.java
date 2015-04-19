@@ -1,5 +1,7 @@
 package com.iems5722.partytime;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -9,6 +11,8 @@ import java.util.ArrayList;
  * dealing with game specific logic and acting as middle man between Activity and GameServer
  */
 public class GameController {
+    private static final String TAG = GameController.class.getClass().getSimpleName();
+
     // Singleton instance
     protected static GameController instance = null;
 
@@ -19,10 +23,13 @@ public class GameController {
     protected boolean isGameServerActive = false;
 
     // Define MAX_PLAYERS
-    protected int MAX_PLAYERS = 4;
+    public static int MAX_PLAYERS = 4;
 
     // Predefine usernames
     protected ArrayList<String> usernames = null;
+
+    // Predefine player icon resources
+    protected ArrayList<Integer> playerIconResouce = null;
 
     /**
      * Singleton implementation
@@ -37,6 +44,13 @@ public class GameController {
         this.usernames.add("法師歌莉");
         this.usernames.add("舞者結他他");
         this.usernames.add("八神太一");
+
+        // Hard code list of image resource
+        this.playerIconResouce = new ArrayList<>();
+        this.playerIconResouce.add(R.mipmap.p1_icon);
+        this.playerIconResouce.add(R.mipmap.p2_icon);
+        this.playerIconResouce.add(R.mipmap.p3_icon);
+        this.playerIconResouce.add(R.mipmap.p4_icon);
     }
 
     /**
@@ -52,11 +66,11 @@ public class GameController {
     }
 
     /**
-     * API for activities creates and initialize GamerServer
+     * API for activities creates and initialize GamerServer This method implies the caller to be
+     * the host of the gameServer
      *
      * @param ipv4 string
      * @return boolean
-     * @note This method implies the caller to be the host of the gameServer
      */
     public boolean createGameServer(String ipv4) {
         boolean ret = this.gs.setup(ipv4);
@@ -92,9 +106,7 @@ public class GameController {
      * @return String
      */
     public String getServerIP() {
-        String ret = this.gs.getServerIP();
-
-        return ret;
+        return this.gs.getServerIP();
     }
 
     /**
@@ -103,9 +115,7 @@ public class GameController {
      * @return boolean
      */
     public boolean isHost() {
-        boolean ret = this.gs.isHost();
-
-        return ret;
+        return this.gs.isHost();
     }
 
     /**
@@ -124,6 +134,36 @@ public class GameController {
 
         // Instantiating GameClient
         GameClient ret = new GameClient(ipv4, username);
+        return ret;
+    }
+
+    /**
+     * API for fetching player list from GameServer
+     *
+     * @return ArrayList\<GameClient\>
+     */
+    public ArrayList<GameClient> getPlayerList() {
+        return this.gs.getPlayers();
+    }
+
+    /**
+     * API for mapping username to player icon resource ID
+     *
+     * @param username String
+     * @return int
+     */
+    public int getPlayerIconResource(String username) {
+        int ret;
+
+        int index = this.usernames.indexOf(username);
+
+        if (index == -1) {
+            Log.e(TAG, String.format("Username |%s| cannot map to resource id", username));
+            ret = this.playerIconResouce.get(this.playerIconResouce.size() - 1);
+        } else {
+            ret = this.playerIconResouce.get(index);
+        }
+
         return ret;
     }
 }

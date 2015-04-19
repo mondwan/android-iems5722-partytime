@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class LobbyActivity extends Activity {
     private static final String TAG = LobbyActivity.class.getClass().getSimpleName();
@@ -38,6 +40,14 @@ public class LobbyActivity extends Activity {
         // Write Server IP
         String ipv4 = this.gameController.getServerIP();
         this.hostIP.setText(ipv4);
+
+        // Update player list by linking up with GameServer players and our adapter
+        ArrayList<GameClient> players = this.gameController.getPlayerList();
+        this.playerList.setAdapter(
+                new PlayerItemAdapter(
+                        this, R.layout.player_row_view, players
+                )
+        );
     }
 
 

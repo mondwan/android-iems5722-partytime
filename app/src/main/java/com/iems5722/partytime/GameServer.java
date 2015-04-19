@@ -234,6 +234,17 @@ public class GameServer {
     }
 
     /**
+     * API for GameController to send message to the server
+     *
+     * @param obj Object
+     */
+    public void sendMessageToServer(Object obj) {
+        if (!this.isHost) {
+            this.client.sendTCP(obj);
+        }
+    }
+
+    /**
      * A method registers all classes which be sent over the Kryonet network
      *
      * @param instance Kryo

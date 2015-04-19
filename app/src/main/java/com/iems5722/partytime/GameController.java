@@ -25,6 +25,9 @@ public class GameController {
     // Reference for the game server
     protected GameServer gs;
 
+    // Local device IP;
+    protected String localIP;
+
     // Determine whether server is active or not
     protected boolean isGameServerActive = false;
 
@@ -237,6 +240,9 @@ public class GameController {
                     self.isGameServerActive = true;
 
                     // Send a join host request to the server
+                    JoinHostRequest req = new JoinHostRequest();
+                    req.requestIP = self.localIP;
+                    self.gs.sendMessageToServer(req);
                 } else {
                     // Unable to connect to ipv4
                     self.isGameServerActive = false;
@@ -272,6 +278,15 @@ public class GameController {
      */
     public String getServerIP() {
         return this.gs.getServerIP();
+    }
+
+    /**
+     * Set local device IP address
+     *
+     * @param ipv4 String
+     */
+    public void setLocalIP(String ipv4) {
+        this.localIP = ipv4;
     }
 
     /**

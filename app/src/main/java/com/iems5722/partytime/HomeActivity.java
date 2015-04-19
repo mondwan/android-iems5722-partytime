@@ -63,6 +63,9 @@ public class HomeActivity extends Activity {
                     // Get a game manager reference
                     GameController gameController = GameController.getInstance();
 
+                    // Record our local ip
+                    gameController.setLocalIP(ip);
+
                     // Setup a game server with IP
                     boolean res = gameController.createGameServer(ip);
 
@@ -100,10 +103,30 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "join button clicked");
+                HomeActivity self = HomeActivity.this;
 
-                // Go to JoinHostActivity
-                Intent intent = new Intent(HomeActivity.this, JoinHostActivity.class);
-                startActivity(intent);
+                try {
+                    // Make sure WIFI is available before going to the lobby
+                    if (!self.checkWifiAvailability()) {
+                        throw new NoWifiException();
+                    }
+
+                    // Get IP address
+                    String ip = self.getMyIP();
+                    Log.d(TAG, String.format("My IP address |%s|", ip));
+
+                    // Get a game manager reference
+                    GameController gameController = GameController.getInstance();
+
+                    // Record our local ip
+                    gameController.setLocalIP(ip);
+
+                    // Go to JoinHostActivity
+                    Intent intent = new Intent(HomeActivity.this, JoinHostActivity.class);
+                    startActivity(intent);
+                } catch (NoWifiException e) {
+                    // NO op
+                }
             }
         });
         stopwatchButton.setOnClickListener(new View.OnClickListener() {

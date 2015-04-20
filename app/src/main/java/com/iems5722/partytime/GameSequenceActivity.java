@@ -22,11 +22,13 @@ public class GameSequenceActivity extends ActionBarActivity {
     // 0 for CrazyClick
     // 1 for ColorResponse
     // 2 for Pattern
-    final int maxGameNumber = 3;
+    // 3 for stopwatch
+    final int maxGameNumber = 4;
 
     final int crazyGameRequestCode = 0;
     final int colorResponseCode = 1;
     final int patternCode = 2;
+    final int stopwatchCode = 3;
 
     // Game flow control
     ArrayList<Integer> gameQueue;
@@ -44,6 +46,7 @@ public class GameSequenceActivity extends ActionBarActivity {
         gameQueue.add(0);
         gameQueue.add(1);
         gameQueue.add(2);
+        gameQueue.add(3);
     }
 
     private void startCrazyClickGame() {
@@ -59,6 +62,11 @@ public class GameSequenceActivity extends ActionBarActivity {
     private void startPatternGame() {
         Intent intent = new Intent(GameSequenceActivity.this, PatternActivity.class);
         startActivityForResult(intent, patternCode);
+    }
+
+    private void startStopwatchGame() {
+        Intent intent = new Intent(GameSequenceActivity.this, StopwatchActivity.class);
+        startActivityForResult(intent, stopwatchCode);
     }
 
     private void startCD() {
@@ -80,6 +88,10 @@ public class GameSequenceActivity extends ActionBarActivity {
                 //Pattern
                 startPatternGame();
                 break;
+            case 3:
+                //Stopwatch
+                startStopwatchGame();
+                break;
             default:
                 break;
         }
@@ -99,6 +111,10 @@ public class GameSequenceActivity extends ActionBarActivity {
             case 2:
                 //Pattern
                 ret = "Pattern";
+                break;
+            case 3:
+                //Stopwatch
+                ret = "Stopwatch";
                 break;
             default:
                 //Mondhaha Game
@@ -123,7 +139,12 @@ public class GameSequenceActivity extends ActionBarActivity {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startChosenGame(gameIndex++);
+                try {
+                    startChosenGame(gameQueue.get(gameIndex++));
+                } catch (Exception e) {
+                    gameIndex = 0;
+                    startChosenGame(gameQueue.get(gameIndex++));
+                }
                 startCD();
                 testButton.setText("Click to start next game: " + getButtonText()) ;
             }

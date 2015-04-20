@@ -1,6 +1,8 @@
 package com.iems5722.partytime;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,7 +26,7 @@ import java.util.Random;
     TextView rule;
     Handler handler;
     int randnum;
-    int scores;
+    int score;
     //boolean stopped;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ import java.util.Random;
                     time = now - init;
                     String displaymillisec = Long.toString(time);
                     String displaysec = "00";
-                    int seconds;
+                    int seconds = 0;
                     if (time > 1000){
                         seconds = (int) (time / 1000) % 60 ;
                         displaymillisec = Long.toString(time);
@@ -61,11 +63,19 @@ import java.util.Random;
 
                     }
 
+                    // Some effect
+                    if (((int) randnum - seconds) < 2) display.setTextColor(Color.RED);
                     display.setText(displaysec + "." + displaymillisec);
                     handler.postDelayed(this, 30);
                 }
                 else{
                     showElapsedTime(time);
+
+                    // End the activity
+                    Intent output = new Intent();
+                    output.putExtra(GameSequenceActivity.SCORE_CODE, score);
+                    setResult(RESULT_OK, output);
+                    finish();
                 }
             }
         };
@@ -103,20 +113,21 @@ import java.util.Random;
         Log.d(TAG, "stoppedMilliseconds: " + mstoptime);
         int offset = randnum * 1000 - Math.abs(randnum * 1000 - mstoptime);
         Log.d(TAG, "offset: " + offset);
-        scores = Math.round(offset / randnum);
-        Log.d(TAG, "scores: " + scores);
-        Toast.makeText(StopwatchActivity.this, "Your scores is " + scores,
-                Toast.LENGTH_SHORT).show();
+        score = Math.round(offset / randnum);
+        Log.d(TAG, "scores: " + score);
+//        Toast.makeText(StopwatchActivity.this, "Your scores is " + scores,
+//                Toast.LENGTH_SHORT).show();
 
     }
 
     private void randNumGen(){
 
-        int max = 20;
-        int min = 10;
+        int max = 10;
+        int min = 4;
 
         Random random = new Random();
-        randnum = random.nextInt(max - min + 1) + min;
+//        randnum = random.nextInt(max - min + 1) + min;
+        randnum = random.nextInt(max-min) + min;
 
     }
 

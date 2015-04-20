@@ -1,6 +1,5 @@
 package com.iems5722.partytime;
 
-import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -247,8 +246,8 @@ public class GameController {
 
                             // Forward message to register activity
                             msg = activityHandler.obtainMessage(
-                                UPDATE_PLAYER_LIST_NOTIFICATION,
-                                updatePlayerListNotification
+                                    UPDATE_PLAYER_LIST_NOTIFICATION,
+                                    updatePlayerListNotification
                             );
                             msg.sendToTarget();
                         } else if (obj instanceof KickedNotification) {

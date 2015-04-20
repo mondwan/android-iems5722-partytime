@@ -7,6 +7,7 @@ import android.util.Log;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.EndPoint;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
@@ -37,6 +38,10 @@ public class GameServer {
 
     // Reference for Kryonet client
     protected Client client;
+
+    // A reference of a listener which will be attach to either the Server or Client depends on
+    // the run mode we are going to run
+    protected Listener listener;
 
     // List of getters and setters
     public boolean isHost() {
@@ -69,7 +74,8 @@ public class GameServer {
         public String ipv4;
     }
 
-    protected GameServer() {}
+    protected GameServer() {
+    }
 
     public static GameServer getInstance() {
         if (instance == null) {
@@ -95,7 +101,7 @@ public class GameServer {
 
         // Instantiate Kryonet server
         this.server = new Server() {
-            protected Connection newConnection () {
+            protected Connection newConnection() {
                 return new GameConnection();
             }
         };
@@ -106,45 +112,11 @@ public class GameServer {
         // Register classes we are going to send through the network
         this.register(this.server.getKryo());
 
+        // Setup a listener
+        this.listener = this.createKryonetServerListener(handler);
+
         // Register a listener so that we forward received Messages to GameController
-        this.server.addListener(new Listener() {
-            /**
-             * Handler for handling incoming client connection
-             * @param c Connection
-             */
-            public void connected(Connection c) {
-                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                Log.d(TAG, String.format("Connected IP |%s|", ipv4));
-
-                GameConnection gameConnection = (GameConnection) c;
-                gameConnection.ipv4 = ipv4;
-            }
-
-            /**
-             * Handler for receiving messages from peers
-             * @param c Connection
-             * @param obj Object. Message specific
-             */
-            public void received(Connection c, Object obj) {
-                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                Log.d(TAG, String.format("Server received message from ip |%s|", ipv4));
-
-                Message msg = handler.obtainMessage(ON_RECEIVED_MSG, obj);
-                msg.sendToTarget();
-            }
-
-            /**
-             * Handler for client disconnection
-             * @param c Connection
-             */
-            public void disconnected(Connection c) {
-                GameConnection gameConnection = (GameConnection) c;
-                Log.d(TAG, String.format("Client |%s| disconnected", gameConnection.ipv4));
-
-                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, gameConnection.ipv4);
-                msg.sendToTarget();
-            }
-        });
+        this.server.addListener(this.listener);
 
         try {
             // Try to occupy the ports from system
@@ -186,30 +158,11 @@ public class GameServer {
             // Register classes we are going to send through the network
             this.register(this.client.getKryo());
 
+            // Define the listener
+            this.listener = this.createKryonetClientListener(handler);
+
             // Register a listener so that we forward received Messages to GameController
-            this.client.addListener(new Listener() {
-                /**
-                 * Handler for receiving messages from peers
-                 * @param c Connection
-                 * @param obj Object. Message specific
-                 */
-                public void received(Connection c, Object obj) {
-                    String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                    Log.d(TAG, String.format("Client received message from ip |%s|", ipv4));
-
-                    Message msg = handler.obtainMessage(ON_RECEIVED_MSG, obj);
-                    msg.sendToTarget();
-                }
-
-                /**
-                 * Handler for server disconnection
-                 * @param c Connection
-                 */
-                public void disconnected(Connection c) {
-                    Message msg = handler.obtainMessage(ON_SERVER_DISCONNECTED);
-                    msg.sendToTarget();
-                }
-            });
+            this.client.addListener(this.listener);
 
             // Try to connect to given ipv4 with 5000 secs timeout
             this.client.connect(5000, ipv4, tcpPort, udpPort);
@@ -232,12 +185,23 @@ public class GameServer {
     public void stop() {
         Log.d(TAG, "Close game server...");
 
-        if (this.isHost) {
-            // Stop the Kryonet server
-            this.server.stop();
-        } else {
-            this.client.stop();
-        }
+
+        // Since both of them have been implemented interface, classify them to instance for later
+        // operation
+        EndPoint instance = this.isHost ? this.server : this.client;
+
+        // Detached the listener from the instance
+        instance.removeListener(this.listener);
+
+        // Set the lister to be null
+        this.listener = null;
+
+        // Stop the EndPoint operation
+        instance.stop();
+
+        // Stop all connections
+        instance.close();
+
     }
 
     /**
@@ -258,6 +222,83 @@ public class GameServer {
      */
     public void broadcastMessage(Object obj) {
         this.server.sendToAllTCP(obj);
+    }
+
+    /**
+     * Helper method create a Listener for listening events from Kryonet's client
+     *
+     * @param handler A handler for GameServer to forward messages back to GameController
+     */
+    protected Listener createKryonetClientListener(final Handler handler) {
+        return new Listener() {
+            /**
+             * Handler for receiving messages from peers
+             * @param c Connection
+             * @param obj Object. Message specific
+             */
+            public void received(Connection c, Object obj) {
+                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                Log.d(TAG, String.format("Client received message from ip |%s|", ipv4));
+
+                Message msg = handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                msg.sendToTarget();
+            }
+
+            /**
+             * Handler for server disconnection
+             * @param c Connection
+             */
+            public void disconnected(Connection c) {
+                Message msg = handler.obtainMessage(ON_SERVER_DISCONNECTED);
+                msg.sendToTarget();
+            }
+        };
+    }
+
+    /**
+     * Helper method create a Listener for listening events from Kryonet's server
+     *
+     * @param handler A handler for GameServer to forward messages back to GameController
+     */
+    protected Listener createKryonetServerListener(final Handler handler) {
+        return new Listener() {
+            /**
+             * Handler for handling incoming client connection
+             * @param c Connection
+             */
+            public void connected(Connection c) {
+                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                Log.d(TAG, String.format("Connected IP |%s|", ipv4));
+
+                GameConnection gameConnection = (GameConnection) c;
+                gameConnection.ipv4 = ipv4;
+            }
+
+            /**
+             * Handler for receiving messages from peers
+             * @param c Connection
+             * @param obj Object. Message specific
+             */
+            public void received(Connection c, Object obj) {
+                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+                Log.d(TAG, String.format("Server received message from ip |%s|", ipv4));
+
+                Message msg = handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                msg.sendToTarget();
+            }
+
+            /**
+             * Handler for client disconnection
+             * @param c Connection
+             */
+            public void disconnected(Connection c) {
+                GameConnection gameConnection = (GameConnection) c;
+                Log.d(TAG, String.format("Client |%s| disconnected", gameConnection.ipv4));
+
+                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, gameConnection.ipv4);
+                msg.sendToTarget();
+            }
+        };
     }
 
     /**

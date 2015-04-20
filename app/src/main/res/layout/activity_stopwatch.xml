@@ -1,50 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.iems5722.partytime.StopwatchActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stopwatch_title"
-        android:id="@+id/stopwatch_title" />
+        android:text="I am the score board"
+        android:id="@+id/scoreView"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/stopButton"
+        android:layout_alignEnd="@+id/stopButton"
+        android:layout_marginTop="47dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/game_rule"
-        android:id="@+id/game_rule"
-        android:textSize="25dp" />
+        android:text="I am the timer"
+        android:id="@+id/timeView"
+        android:layout_marginTop="116dp"
+        android:singleLine="false"
+        android:layout_below="@+id/scoreView"
+        android:layout_centerHorizontal="true" />
 
-    <TextView android:id="@+id/display"
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00.000"
-        android:textSize="100dp">
-    </TextView>
+        android:text="Stop Button"
+        android:id="@+id/stopButton"
+        android:layout_marginTop="64dp"
+        android:layout_below="@+id/timeView"
+        android:layout_centerHorizontal="true" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/onoff"
-            android:text="ON/OFF">
-        </ToggleButton>
-
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="STOP"-->
-            <!--android:id="@+id/stop" />-->
-
-    </LinearLayout>
-
-
-
-</LinearLayout>
+        android:text="I am the instruction board"
+        android:id="@+id/instructionView"
+        android:layout_alignBottom="@+id/timeView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp" />
+</RelativeLayout>

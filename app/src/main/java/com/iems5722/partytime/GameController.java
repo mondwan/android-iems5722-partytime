@@ -139,16 +139,23 @@ public class GameController {
                     case GameServer.ON_CLIENT_DISCONNECTED:
                         String clientIpv4 = (String) obj;
                         self.removePlayer(clientIpv4);
-                        UpdatePlayerListNotification notification =
-                                new UpdatePlayerListNotification();
 
-                        notification.players = self.playerList;
+                        updatePlayerListNotification.players = self.playerList;
 
                         msg = activityHandler.obtainMessage(
                                 UPDATE_PLAYER_LIST_NOTIFICATION,
-                                notification
+                                updatePlayerListNotification
                         );
                         msg.sendToTarget();
+
+                        // Broadcast UPDATE_PLAYER_LIST_NOTIFICATION
+                        // Start a new thread to broadcast messages to peers
+                        self.networkCallsThreadPool.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                self.gs.broadcastMessage(updatePlayerListNotification);
+                            }
+                        });
                         break;
                     case GameServer.ON_SERVER_DISCONNECTED:
                         if (obj instanceof ServerDownNotification) {

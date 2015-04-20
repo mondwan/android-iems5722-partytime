@@ -125,14 +125,30 @@ public class GameController {
                 final GameController self = GameController.this;
 
                 // Setup a reference for the message payload
-                Object obj = inputMessage.obj;
+                final Object obj = inputMessage.obj;
+
+                // A message reference will be used later on
+                Message msg;
+
+                // A updateNotification reference
+                final UpdatePlayerListNotification updatePlayerListNotification =
+                        new UpdatePlayerListNotification();
 
                 // Determine type of the input message
                 switch (inputMessage.what) {
                     case GameServer.ON_CLIENT_DISCONNECTED:
-                        if (obj instanceof UpdatePlayerListNotification) {
-                            activityHandler.obtainMessage(UPDATE_PLAYER_LIST_NOTIFICATION, obj);
-                        }
+                        String clientIpv4 = (String) obj;
+                        self.removePlayer(clientIpv4);
+                        UpdatePlayerListNotification notification =
+                                new UpdatePlayerListNotification();
+
+                        notification.players = self.playerList;
+
+                        msg = activityHandler.obtainMessage(
+                                UPDATE_PLAYER_LIST_NOTIFICATION,
+                                notification
+                        );
+                        msg.sendToTarget();
                         break;
                     case GameServer.ON_SERVER_DISCONNECTED:
                         if (obj instanceof ServerDownNotification) {
@@ -163,14 +179,15 @@ public class GameController {
                             res.serverIP = self.getServerIP();
 
                             // Forward the message to the register activity
-                            Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
+                            msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
                             msg.sendToTarget();
 
                             // Send a notification about updating a player list
                             if (res.isSuccess) {
+                                updatePlayerListNotification.players = self.playerList;
                                 msg = activityHandler.obtainMessage(
                                         UPDATE_PLAYER_LIST_NOTIFICATION,
-                                        res
+                                        updatePlayerListNotification
                                 );
                                 msg.sendToTarget();
                             }
@@ -184,10 +201,8 @@ public class GameController {
 
                                     // Broadcast playerList update only if JoinHost is success
                                     if (res.isSuccess) {
-                                        UpdatePlayerListNotification notification =
-                                                new UpdatePlayerListNotification();
-                                        notification.players = self.playerList;
-                                        self.gs.broadcastMessage(notification);
+                                        updatePlayerListNotification.players = self.playerList;
+                                        self.gs.broadcastMessage(updatePlayerListNotification);
                                     }
                                 }
                             });
@@ -208,27 +223,26 @@ public class GameController {
                             );
 
                             // Forward message to the registered activity
-                            Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
+                            msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
                             msg.sendToTarget();
                         } else if (obj instanceof UpdatePlayerListNotification) {
                             Log.d(TAG, "UpdatePlayerList notification received");
 
                             // Update our player list
-                            UpdatePlayerListNotification notification =
-                                    (UpdatePlayerListNotification) obj;
+                            updatePlayerListNotification.players =
+                                    ((UpdatePlayerListNotification) obj).players;
 
                             // Destroy the original one
                             self.playerList.clear();
 
                             // Add elements in the request
-                            self.playerList.addAll(notification.players);
+                            self.playerList.addAll(updatePlayerListNotification.players);
 
                             // Forward message to register activity
-                            Message msg =
-                                    activityHandler.obtainMessage(
-                                            UPDATE_PLAYER_LIST_NOTIFICATION,
-                                            obj
-                                    );
+                            msg = activityHandler.obtainMessage(
+                                UPDATE_PLAYER_LIST_NOTIFICATION,
+                                updatePlayerListNotification
+                            );
                             msg.sendToTarget();
                         } else if (obj instanceof KickedNotification) {
                             activityHandler.obtainMessage(KICKED_NOTIFICATION, obj);
@@ -416,6 +430,24 @@ public class GameController {
     }
 
     /**
+     * API which remove a player from the playList
+     *
+     * @param ipv4 String
+     */
+    public void removePlayer(String ipv4) {
+        ArrayList<GamePlayer> tmp = new ArrayList<>();
+
+        for (GamePlayer player : this.playerList) {
+            if (!player.getIp().equals(ipv4)) {
+                tmp.add(player);
+            }
+        }
+
+        this.playerList.clear();
+        this.playerList.addAll(tmp);
+    }
+
+    /**
      * API which creates a GamePlayer for GameServer
      *
      * @param ipv4 String
@@ -428,14 +460,27 @@ public class GameController {
         int numOfPlayer = this.playerList.size();
 
         if (numOfPlayer < MAX_PLAYERS) {
+            // Player position starts from zero
+            int position = 0;
+
+            // Assume ordering equals to the player position
+            for (GamePlayer player : this.playerList) {
+                // Check out whether position has been occupied or not
+                if (player.position == position) {
+                    position++;
+                } else {
+                    break;
+                }
+            }
+
             // Fetch username
-            String username = this.listOfUsername.get(numOfPlayer);
+            String username = this.listOfUsername.get(position);
 
             // Instantiating GameClient
-            GamePlayer player = new GamePlayer(ipv4, username, numOfPlayer);
+            GamePlayer player = new GamePlayer(ipv4, username, position);
 
             // Add a player to the playerList
-            this.playerList.add(player);
+            this.playerList.add(position, player);
 
             ret = true;
         }

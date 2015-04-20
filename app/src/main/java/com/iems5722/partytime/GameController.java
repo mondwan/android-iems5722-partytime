@@ -166,6 +166,15 @@ public class GameController {
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
                             msg.sendToTarget();
 
+                            // Send a notification about updating a player list
+                            if (res.isSuccess) {
+                                msg = activityHandler.obtainMessage(
+                                        UPDATE_PLAYER_LIST_NOTIFICATION,
+                                        res
+                                );
+                                msg.sendToTarget();
+                            }
+
                             // Start a new thread to broadcast messages to peers
                             self.networkCallsThreadPool.execute(new Runnable() {
                                 @Override
@@ -173,16 +182,13 @@ public class GameController {
                                     // Broadcast the JoinHostResponse
                                     self.gs.broadcastMessage(res);
 
-                                    // Stop broadcast UpdateNotification if request is not success
-                                    if (!res.isSuccess) {
-                                        return;
+                                    // Broadcast playerList update only if JoinHost is success
+                                    if (res.isSuccess) {
+                                        UpdatePlayerListNotification notification =
+                                                new UpdatePlayerListNotification();
+                                        notification.players = self.playerList;
+                                        self.gs.broadcastMessage(notification);
                                     }
-
-                                    // Broadcast the UpdatePlayerListNotification
-                                    UpdatePlayerListNotification notification =
-                                            new UpdatePlayerListNotification();
-                                    notification.players = self.playerList;
-                                    self.gs.broadcastMessage(notification);
                                 }
                             });
                         } else if (obj instanceof LeaveHostRequest) {

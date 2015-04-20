@@ -60,13 +60,6 @@ public class LobbyActivity extends Activity {
             public void handleMessage(Message inputMessage) {
                 LobbyActivity self = LobbyActivity.this;
                 switch (inputMessage.what) {
-                    case GameController.JOIN_HOST_RESPONSE:
-                        GameController.JoinHostResponse
-                                obj = (GameController.JoinHostResponse) inputMessage.obj;
-                        if (obj.isSuccess) {
-                            self.playerListAdapter.notifyDataSetChanged();
-                        }
-                        break;
                     case GameController.UPDATE_PLAYER_LIST_NOTIFICATION:
                         self.playerListAdapter.notifyDataSetChanged();
                         break;

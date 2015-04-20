@@ -11,8 +11,6 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Besides holding information for communicating with peers (other players), it also provides
@@ -61,16 +59,17 @@ public class GameServer {
         this.serverIP = serverIP;
     }
 
-
     // List of ACTION_CODE for handler from GameController
     public static final int ON_RECEIVED_MSG = 0;
     public static final int ON_SERVER_DISCONNECTED = 1;
     public static final int ON_CLIENT_DISCONNECTED = 2;
 
-
-    protected GameServer() {
-
+    // Holds an ipv4 reference for us to look up later on
+    protected static class GameConnection extends Connection {
+        public String ipv4;
     }
+
+    protected GameServer() {}
 
     public static GameServer getInstance() {
         if (instance == null) {
@@ -95,7 +94,11 @@ public class GameServer {
         Log.d(TAG, String.format("Setup server with ip |%s|...", ip));
 
         // Instantiate Kryonet server
-        this.server = new Server();
+        this.server = new Server() {
+            protected Connection newConnection () {
+                return new GameConnection();
+            }
+        };
 
         // Define we are running as Host of the GameServer
         this.isHost = true;
@@ -105,9 +108,16 @@ public class GameServer {
 
         // Register a listener so that we forward received Messages to GameController
         this.server.addListener(new Listener() {
+            /**
+             * Handler for handling incoming client connection
+             * @param c Connection
+             */
             public void connected(Connection c) {
                 String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
                 Log.d(TAG, String.format("Connected IP |%s|", ipv4));
+
+                GameConnection gameConnection = (GameConnection) c;
+                gameConnection.ipv4 = ipv4;
             }
 
             /**
@@ -128,12 +138,10 @@ public class GameServer {
              * @param c Connection
              */
             public void disconnected(Connection c) {
-//                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-//                Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
-                // TODO: c will be null after disconnection, we need to figure out how to get back
-                // the disconnected ip
+                GameConnection gameConnection = (GameConnection) c;
+                Log.d(TAG, String.format("Client |%s| disconnected", gameConnection.ipv4));
 
-                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, "unknown");
+                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, gameConnection.ipv4);
                 msg.sendToTarget();
             }
         });
@@ -198,8 +206,6 @@ public class GameServer {
                  * @param c Connection
                  */
                 public void disconnected(Connection c) {
-                    Log.d(TAG, "Disconnection from server");
-
                     Message msg = handler.obtainMessage(ON_SERVER_DISCONNECTED);
                     msg.sendToTarget();
                 }
@@ -207,6 +213,9 @@ public class GameServer {
 
             // Try to connect to given ipv4 with 5000 secs timeout
             this.client.connect(5000, ipv4, tcpPort, udpPort);
+
+            // Set Server IPV4 for successful connection
+            this.setServerIP(ipv4);
 
             Log.d(TAG, String.format("Able to connect to GameServer with ip |%s|", ipv4));
         } catch (IOException e) {

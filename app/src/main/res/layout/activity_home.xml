@@ -50,5 +50,14 @@
         android:layout_below="@+id/stopwatchButton"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Color Activity"
+        android:id="@+id/colorResponse"
+        android:layout_below="@+id/crazyClickButton"
+        android:layout_centerHorizontal="true"
+        android:singleLine="true" />
+
 
 </RelativeLayout>

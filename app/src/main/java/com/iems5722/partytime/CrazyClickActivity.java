@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 public class CrazyClickActivity extends ActionBarActivity {
 
+    final int gameTime = 10;
+
     Button crazyButton;
     TextView counterView;
     TextView timeView;
@@ -42,7 +44,8 @@ public class CrazyClickActivity extends ActionBarActivity {
             }
         });
 
-        new CountDownTimer(10000, 1000) {
+        // Game Start
+        new CountDownTimer(gameTime * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 timeView.setText("Time remaining: " + millisUntilFinished / 1000);

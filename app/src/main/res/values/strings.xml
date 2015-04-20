@@ -27,4 +27,7 @@
 
     <!--CrazyClickActivity-->
     <string name="title_activity_crazy_click">CrazyClickActivity</string>
+
+    <!--ColorResponseActivity-->
+    <string name="title_activity_color_response">ColorResponseActivity</string>
 </resources>

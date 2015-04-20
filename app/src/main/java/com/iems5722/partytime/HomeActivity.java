@@ -159,7 +159,7 @@ public class HomeActivity extends Activity {
             }
         });
     }
-    }
+
 
     @Override
     public void onBackPressed() {

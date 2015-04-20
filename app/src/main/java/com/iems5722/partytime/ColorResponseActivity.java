@@ -92,9 +92,9 @@ public class ColorResponseActivity extends ActionBarActivity {
         setContentView(R.layout.activity_color_response);
 
         masterButton = (Button) this.findViewById(R.id.masterButton);
-        redButton = (Button) this.findViewById(R.id.redButton);
-        greenButton = (Button) this.findViewById(R.id.greenButton);
-        blueButton = (Button) this.findViewById(R.id.blueButton);
+        redButton = (Button) this.findViewById(R.id.redButton); redButton.setBackgroundColor(Color.LTGRAY);
+        greenButton = (Button) this.findViewById(R.id.greenButton); greenButton.setBackgroundColor(Color.LTGRAY);
+        blueButton = (Button) this.findViewById(R.id.blueButton); blueButton.setBackgroundColor(Color.LTGRAY);
         timeView = (TextView) this.findViewById(R.id.timeView);
         scoreView = (TextView) this.findViewById(R.id.scoreView);
 

@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +60,20 @@ public class PlayerItemAdapter extends ArrayAdapter<GamePlayer> {
         // Get icon image resource
         int imageResourceID = gameController.getPlayerIconResource(player.getUsername());
 
+        // Get local player position
+        int localPlayerPosition = gameController.getLocalPlayerPosition();
+
         // Fill in data
         playerIP.setText(player.getIp());
         playerName.setText(player.getUsername());
         icon.setImageResource(imageResourceID);
 
+        // Highlight local player row
+        if (localPlayerPosition == pos) {
+            convertView.setBackgroundColor(Color.CYAN);
+        } else {
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+        }
         return convertView;
     }
 }

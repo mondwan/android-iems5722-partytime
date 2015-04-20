@@ -563,6 +563,34 @@ public class GameController {
     }
 
     /**
+     * API fetches player instance by giving a ipv4
+     *
+     * @param ipv4
+     * @return int
+     */
+    public int getPlayerPosition(String ipv4) {
+        int ret = -1;
+
+        // Assume ordering equals to the player position
+        for (GamePlayer player : this.playerList) {
+            if (player.getIp().equals(ipv4)) {
+                ret = player.getPosition();
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * A helper API returns the position of the local player
+     *
+     * @return int
+     */
+    public int getLocalPlayerPosition() {
+        return this.getPlayerPosition(this.localIP);
+    }
+
+    /**
      * API for fetching player list from GameServer
      *
      * @return ArrayList\<GameClient\>

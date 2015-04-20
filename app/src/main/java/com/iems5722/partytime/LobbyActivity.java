@@ -30,15 +30,15 @@ public class LobbyActivity extends Activity {
 
     // Handler reference
     protected Handler mHandler = null;
-    protected MediaPlayer mp;
+
+    // Media player reference
+    protected MediaPlayer mp = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
-        mp = MediaPlayer.create(LobbyActivity.this,R.raw.mario);
-        mp.setLooping(true);
-        mp.start();
         // Setup reference for our properties
         this.startButton = (Button) this.findViewById(R.id.startButton);
         this.hostIP = (TextView) this.findViewById(R.id.hostIP);
@@ -112,7 +112,57 @@ public class LobbyActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Define the media player for playing background music
+        this.initializeBackgroundMusic();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Play the background music
+        if (this.mp != null && !this.mp.isPlaying()) {
+            this.mp.start();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Pause the background music
+        this.mp.pause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Stop the background music
+        this.mp.stop();
+        this.mp.release();
+        this.mp = null;
+    }
+
+    /**
+     * Helper methods initialize the media player for playing background music
+     */
+    protected void initializeBackgroundMusic() {
+        if (this.mp == null) {
+            // Define the media player for playing background music
+            this.mp = MediaPlayer.create(LobbyActivity.this, R.raw.mario);
+
+            // Loop the music
+            this.mp.setLooping(true);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
+        final LobbyActivity self = LobbyActivity.this;
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Quit Lobby");
         mp.stop();
@@ -140,6 +190,13 @@ public class LobbyActivity extends Activity {
                 "NO", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // Replay the background music
+                        self.mp.stop();
+                        self.mp.release();
+                        self.mp = null;
+
+                        self.initializeBackgroundMusic();
+                        self.mp.start();
                     }
                 }
         );

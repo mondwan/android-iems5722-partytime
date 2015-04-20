@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -32,9 +33,6 @@ public class GameServer {
     // Define local machine is the host or not
     protected boolean isHost = false;
 
-    // Define a list for holding GameClient
-    protected ArrayList<GamePlayer> players = null;
-
     // Reference for Kryonet server
     protected Server server;
 
@@ -44,10 +42,6 @@ public class GameServer {
     // List of getters and setters
     public boolean isHost() {
         return this.isHost;
-    }
-
-    public ArrayList<GamePlayer> getPlayers() {
-        return players;
     }
 
     public String getServerIP() {
@@ -62,10 +56,6 @@ public class GameServer {
         return udpPort;
     }
 
-    public void addPlayer(GamePlayer c) {
-        this.players.add(c);
-    }
-
     // List of ACTION_CODE for handler from GameController
     public static final int ON_RECEIVED_MSG = 0;
     public static final int ON_SERVER_DISCONNECTED = 1;
@@ -73,7 +63,7 @@ public class GameServer {
 
 
     protected GameServer() {
-        this.players = new ArrayList<>();
+
     }
 
     public static GameServer getInstance() {
@@ -121,9 +111,10 @@ public class GameServer {
              */
             public void received(Connection c, Object obj) {
                 String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                Log.d(TAG, String.format("Received message from ip |%s|", ipv4));
+                Log.d(TAG, String.format("Server received message from ip |%s|", ipv4));
 
-                handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                Message msg = handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                msg.sendToTarget();
             }
 
             /**
@@ -134,7 +125,8 @@ public class GameServer {
                 String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
                 Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
 
-                handler.obtainMessage(ON_CLIENT_DISCONNECTED, ipv4);
+                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, ipv4);
+                msg.sendToTarget();
             }
         });
 
@@ -187,9 +179,10 @@ public class GameServer {
                  */
                 public void received(Connection c, Object obj) {
                     String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                    Log.d(TAG, String.format("Received message from ip |%s|", ipv4));
+                    Log.d(TAG, String.format("Client received message from ip |%s|", ipv4));
 
-                    handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                    Message msg = handler.obtainMessage(ON_RECEIVED_MSG, obj);
+                    msg.sendToTarget();
                 }
 
                 /**
@@ -197,10 +190,10 @@ public class GameServer {
                  * @param c Connection
                  */
                 public void disconnected(Connection c) {
-                    String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                    Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
+                    Log.d(TAG, "Disconnection from server");
 
-                    handler.obtainMessage(ON_SERVER_DISCONNECTED);
+                    Message msg = handler.obtainMessage(ON_SERVER_DISCONNECTED);
+                    msg.sendToTarget();
                 }
             });
 
@@ -228,9 +221,6 @@ public class GameServer {
         } else {
             this.client.stop();
         }
-
-        // Empty list of players
-        this.players.clear();
     }
 
     /**

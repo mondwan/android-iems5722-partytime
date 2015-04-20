@@ -112,154 +112,7 @@ public class GameController {
         this.playerList = new ArrayList<>();
 
         // Define myHandler
-        this.myHandler = new Handler() {
-            /**
-             * A handler for GameServer to forward message to us
-             *
-             * @param inputMessage Message
-             */
-            @Override
-            public void handleMessage(Message inputMessage) {
-                // Setup a reference for this handler to access our activity
-                final GameController self = GameController.this;
-
-                // Setup a reference for the message payload
-                final Object obj = inputMessage.obj;
-
-                // A message reference will be used later on
-                Message msg;
-
-                // A updateNotification reference
-                final UpdatePlayerListNotification updatePlayerListNotification =
-                        new UpdatePlayerListNotification();
-
-                // Determine type of the input message
-                switch (inputMessage.what) {
-                    case GameServer.ON_CLIENT_DISCONNECTED:
-                        String clientIpv4 = (String) obj;
-                        self.removePlayer(clientIpv4);
-
-                        updatePlayerListNotification.players = self.playerList;
-
-                        msg = activityHandler.obtainMessage(
-                                UPDATE_PLAYER_LIST_NOTIFICATION,
-                                updatePlayerListNotification
-                        );
-                        msg.sendToTarget();
-
-                        // Broadcast UPDATE_PLAYER_LIST_NOTIFICATION
-                        // Start a new thread to broadcast messages to peers
-                        self.networkCallsThreadPool.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                self.gs.broadcastMessage(updatePlayerListNotification);
-                            }
-                        });
-                        break;
-                    case GameServer.ON_SERVER_DISCONNECTED:
-                        // Forward the message to the registered handler
-                        msg = activityHandler.obtainMessage(SERVER_DOWN_NOTFICATION);
-                        msg.sendToTarget();
-
-                        // Stop our client here since server has been shutdown
-                        self.stopGameServer();
-                        break;
-                    case GameServer.ON_RECEIVED_MSG:
-                        if (obj instanceof JoinHostRequest) {
-                            // Classify the object to JoinHostRequest
-                            JoinHostRequest req = (JoinHostRequest) obj;
-
-                            // Logging
-                            Log.d(
-                                    TAG,
-                                    String.format(
-                                            "Join host request from |%s| received",
-                                            req.requestIP
-                                    )
-                            );
-
-                            // Try to add player
-                            boolean status = self.addPlayer(req.requestIP);
-
-                            // Create a JoinHostResponse message
-                            final JoinHostResponse res = new JoinHostResponse();
-                            res.isSuccess = status;
-                            res.requestIP = req.requestIP;
-                            res.serverIP = self.getServerIP();
-
-                            // Forward the message to the register activity
-                            msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
-                            msg.sendToTarget();
-
-                            // Send a notification about updating a player list
-                            if (res.isSuccess) {
-                                updatePlayerListNotification.players = self.playerList;
-                                msg = activityHandler.obtainMessage(
-                                        UPDATE_PLAYER_LIST_NOTIFICATION,
-                                        updatePlayerListNotification
-                                );
-                                msg.sendToTarget();
-                            }
-
-                            // Start a new thread to broadcast messages to peers
-                            self.networkCallsThreadPool.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // Broadcast the JoinHostResponse
-                                    self.gs.broadcastMessage(res);
-
-                                    // Broadcast playerList update only if JoinHost is success
-                                    if (res.isSuccess) {
-                                        updatePlayerListNotification.players = self.playerList;
-                                        self.gs.broadcastMessage(updatePlayerListNotification);
-                                    }
-                                }
-                            });
-                        } else if (obj instanceof LeaveHostRequest) {
-                            activityHandler.obtainMessage(LEAVE_HOST_REQUEST, obj);
-                        } else if (obj instanceof GetPlayerListRequest) {
-                            activityHandler.obtainMessage(GET_PLAYER_LIST_REQUEST, obj);
-                        } else if (obj instanceof JoinHostResponse) {
-                            // Cast to JoinHostResponse
-                            JoinHostResponse res = (JoinHostResponse) obj;
-
-                            Log.d(
-                                    TAG,
-                                    String.format(
-                                            "Join host request from |%s| received",
-                                            res.requestIP
-                                    )
-                            );
-
-                            // Forward message to the registered activity
-                            msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
-                            msg.sendToTarget();
-                        } else if (obj instanceof UpdatePlayerListNotification) {
-                            Log.d(TAG, "UpdatePlayerList notification received");
-
-                            // Update our player list
-                            updatePlayerListNotification.players =
-                                    ((UpdatePlayerListNotification) obj).players;
-
-                            // Destroy the original one
-                            self.playerList.clear();
-
-                            // Add elements in the request
-                            self.playerList.addAll(updatePlayerListNotification.players);
-
-                            // Forward message to register activity
-                            msg = activityHandler.obtainMessage(
-                                    UPDATE_PLAYER_LIST_NOTIFICATION,
-                                    updatePlayerListNotification
-                            );
-                            msg.sendToTarget();
-                        } else if (obj instanceof KickedNotification) {
-                            activityHandler.obtainMessage(KICKED_NOTIFICATION, obj);
-                        }
-                        break;
-                }
-            }
-        };
+        this.myHandler = this.createGameServerHandler();
 
         // Instantiate a gameServer instance
         this.gs = GameServer.getInstance();
@@ -296,6 +149,200 @@ public class GameController {
     }
 
     /**
+     * Helper method for handling event ON_CLIENT_DISCONNECTED
+     *
+     * @param gameData It should be a ipv4 string
+     */
+    protected void onHandleClientDisconnected(Object gameData) {
+        // Cast our gameData to ipv4 string
+        String ipv4 = (String) gameData;
+
+        // A reference to this activity
+        final GameController self = GameController.this;
+
+        // Notification we will be set later on
+        final UpdatePlayerListNotification notification = new UpdatePlayerListNotification();
+
+        // Remove a player with given ipv4
+        this.removePlayer(ipv4);
+
+        // Add this playerList to the notification
+        notification.players = this.playerList;
+
+        // Send a notification to registered activity
+        Message msg = this.activityHandler.obtainMessage(
+                UPDATE_PLAYER_LIST_NOTIFICATION,
+                notification
+        );
+        msg.sendToTarget();
+
+        // Start a new thread to broadcast this notification to peers
+        this.networkCallsThreadPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                self.gs.broadcastMessage(notification);
+            }
+        });
+    }
+
+    /**
+     * Helper method handles server disconnection event
+     */
+    protected void onHandleServerDisconnect() {
+        // Forward the message to the registered handler
+        Message msg = activityHandler.obtainMessage(SERVER_DOWN_NOTFICATION);
+        msg.sendToTarget();
+
+        // Stop our client here since server has been shutdown
+        this.stopGameServer();
+    }
+
+    /**
+     * Helper method handles message event
+     *
+     * @param gameData It can be anything. That's why we need to a bunch of instanceof to
+     *                 make sure which gameData we are dealing with
+     */
+    protected void onHandleMessage(Object gameData) {
+        // A reference to this activity
+        final GameController self = GameController.this;
+
+        // A notification reference for later work
+        final UpdatePlayerListNotification notification = new UpdatePlayerListNotification();
+
+        // A message reference for later work
+        Message msg;
+
+        // Determine which gameData we need to deal with
+        if (gameData instanceof JoinHostRequest) {
+            // Classify the object to JoinHostRequest
+            JoinHostRequest req = (JoinHostRequest) gameData;
+
+            // Logging
+            Log.d(
+                    TAG,
+                    String.format(
+                            "Join host request from |%s| received",
+                            req.requestIP
+                    )
+            );
+
+            // Try to add player
+            boolean status = this.addPlayer(req.requestIP);
+
+            // Create a JoinHostResponse message
+            final JoinHostResponse res = new JoinHostResponse();
+            res.isSuccess = status;
+            res.requestIP = req.requestIP;
+            res.serverIP = this.getServerIP();
+
+            // Send JoinHostResponse to the register activity
+            msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
+            msg.sendToTarget();
+
+            // Send a notification for updating player list to the register activity
+            if (res.isSuccess) {
+                notification.players = this.playerList;
+                msg = activityHandler.obtainMessage(
+                        UPDATE_PLAYER_LIST_NOTIFICATION,
+                        notification
+                );
+                msg.sendToTarget();
+            }
+
+            // Start a new thread to broadcast the JoinHostResponse and notification to peers
+            this.networkCallsThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    // Broadcast the JoinHostResponse
+                    self.gs.broadcastMessage(res);
+
+                    // Broadcast playerList update only if JoinHost is success
+                    if (res.isSuccess) {
+                        notification.players = self.playerList;
+                        self.gs.broadcastMessage(notification);
+                    }
+                }
+            });
+        } else if (gameData instanceof LeaveHostRequest) {
+            activityHandler.obtainMessage(LEAVE_HOST_REQUEST, gameData);
+        } else if (gameData instanceof GetPlayerListRequest) {
+            activityHandler.obtainMessage(GET_PLAYER_LIST_REQUEST, gameData);
+        } else if (gameData instanceof JoinHostResponse) {
+            // Cast to JoinHostResponse
+            JoinHostResponse res = (JoinHostResponse) gameData;
+
+            Log.d(
+                    TAG,
+                    String.format(
+                            "Join host request from |%s| received",
+                            res.requestIP
+                    )
+            );
+
+            // Send JoinHostResponse to the registered activity
+            msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, gameData);
+            msg.sendToTarget();
+        } else if (gameData instanceof UpdatePlayerListNotification) {
+            Log.d(TAG, "UpdatePlayerList notification received");
+
+            // Update our player list
+            notification.players = ((UpdatePlayerListNotification) gameData).players;
+
+            // Destroy the original one
+            self.playerList.clear();
+
+            // Add elements in the request
+            self.playerList.addAll(notification.players);
+
+            // Send a notification for updating player list to register activity
+            msg = activityHandler.obtainMessage(
+                    UPDATE_PLAYER_LIST_NOTIFICATION,
+                    notification
+            );
+            msg.sendToTarget();
+        } else if (gameData instanceof KickedNotification) {
+            activityHandler.obtainMessage(KICKED_NOTIFICATION, gameData);
+        }
+    }
+
+    /**
+     * Helper method for instantiating a Handler for listening events from GameServer
+     *
+     * @return Handler
+     */
+    protected Handler createGameServerHandler() {
+        return new Handler() {
+            /**
+             * A handler for GameServer to forward message to us
+             *
+             * @param inputMessage Message
+             */
+            @Override
+            public void handleMessage(Message inputMessage) {
+                // Setup a reference for this handler to access our activity
+                final GameController self = GameController.this;
+
+                // Setup a reference for the message payload
+                final Object obj = inputMessage.obj;
+
+                // Determine type of the input message
+                switch (inputMessage.what) {
+                    case GameServer.ON_CLIENT_DISCONNECTED:
+                        self.onHandleClientDisconnected(obj);
+                        break;
+                    case GameServer.ON_SERVER_DISCONNECTED:
+                        self.onHandleServerDisconnect();
+                        break;
+                    case GameServer.ON_RECEIVED_MSG:
+                        self.onHandleMessage(obj);
+                        break;
+                }
+            }
+        };
+    }
+
+    /**
      * API for fetching the singleton instance
      *
      * @return GameController
@@ -315,6 +362,8 @@ public class GameController {
      * @return boolean
      */
     public boolean createGameServer(String ipv4) {
+        // Setup a gameServer and pass our handler so that we can listen events from Kryonet's
+        // instance
         boolean ret = this.gs.setup(ipv4, this.myHandler);
 
         if (ret) {
@@ -345,7 +394,6 @@ public class GameController {
             public void run() {
                 // Connect to given ipv4
                 boolean ret = self.gs.connect(ipv4, self.myHandler);
-                Message msg;
 
                 // Determine the status of the connection
                 if (ret) {
@@ -360,16 +408,14 @@ public class GameController {
                     // Unable to connect to ipv4
                     self.isGameServerActive = false;
 
-                    // Create a failure join host response
+                    // Simulate a failure join host response
                     JoinHostResponse obj = new JoinHostResponse();
                     obj.isSuccess = false;
                     obj.requestIP = self.localIP;
                     obj.serverIP = ipv4;
 
-                    // Attach to the message
-                    msg = self.activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
-
-                    // Send message back to the caller activity
+                    // Send the message back to the registered Activity
+                    Message msg = self.activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
                     msg.sendToTarget();
                 }
             }
@@ -444,15 +490,20 @@ public class GameController {
      * @param ipv4 String
      */
     public void removePlayer(String ipv4) {
+        // An empty list for us to hold player instance temporally
         ArrayList<GamePlayer> tmp = new ArrayList<>();
 
+        // Filter out the player instance which has the given ipv4
         for (GamePlayer player : this.playerList) {
             if (!player.getIp().equals(ipv4)) {
                 tmp.add(player);
             }
         }
 
+        // Clear playerList
         this.playerList.clear();
+
+        // Add back instances in tmp
         this.playerList.addAll(tmp);
     }
 

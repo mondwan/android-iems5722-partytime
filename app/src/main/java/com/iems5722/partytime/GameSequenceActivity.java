@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,20 +11,42 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class GameSequenceActivity extends ActionBarActivity {
 
     final String TAG = "GameSequence";
     final public static String SCORE_CODE = "SCORE_CODE";
 
+    // 0 for CrazyClick
+    // 1 for ColorResponse
+    // 2 for Pattern
+    final int maxGameNumber = 3;
+
     final int crazyGameRequestCode = 0;
     final int colorResponseCode = 1;
+    final int patternCode = 2;
 
+    // Game flow control
+    ArrayList<Integer> gameQueue;
+    int gameIndex = 0;
+
+    // GUI
     Button testButton;
     TextView scoreView;
 
 
-    private void startCrazyGame() {
+    private void initGameQueue() {
+        // hardcode
+        // @TODO random unique game queue
+        gameQueue = new ArrayList<Integer>();
+        gameQueue.add(0);
+        gameQueue.add(1);
+        gameQueue.add(2);
+    }
+
+    private void startCrazyClickGame() {
         Intent intent = new Intent(GameSequenceActivity.this, CrazyClickActivity.class);
         startActivityForResult(intent, crazyGameRequestCode);
     }
@@ -33,14 +56,56 @@ public class GameSequenceActivity extends ActionBarActivity {
         startActivityForResult(intent, colorResponseCode);
     }
 
+    private void startPatternGame() {
+        Intent intent = new Intent(GameSequenceActivity.this, PatternActivity.class);
+        startActivityForResult(intent, patternCode);
+    }
+
     private void startCD() {
         Intent intent = new Intent(GameSequenceActivity.this, CountDownActivity.class);
         startActivity(intent);
     }
 
-    private void startAll() {
-        startCrazyGame();
-        startColorResponseGame();
+    private void startChosenGame(int index) {
+        switch(index) {
+            case 0:
+                //CrazyClick
+                startCrazyClickGame();
+                break;
+            case 1:
+                //ColorResponse
+                startColorResponseGame();
+                break;
+            case 2:
+                //Pattern
+                startPatternGame();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private String getButtonText() {
+        String ret = "";
+        switch(gameIndex) {
+            case 0:
+                //CrazyClick
+                ret = "CrazyClick";
+                break;
+            case 1:
+                //ColorResponse
+                ret = "ColorResponse";
+                break;
+            case 2:
+                //Pattern
+                ret = "Pattern";
+                break;
+            default:
+                //Mondhaha Game
+                ret = "Mond haha";
+                break;
+        }
+        return ret;
     }
 
     @Override
@@ -49,14 +114,18 @@ public class GameSequenceActivity extends ActionBarActivity {
         setContentView(R.layout.activity_game_sequence);
 
         scoreView = (TextView) this.findViewById(R.id.scoreView);
-
         testButton = (Button) this.findViewById(R.id.testButton);
+
+        // init
+        initGameQueue();
+        testButton.setText("Click to start next game: " + getButtonText()) ;
 
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "crazy button clicked");
-                startAll();
+                startChosenGame(gameIndex++);
+                startCD();
+                testButton.setText("Click to start next game: " + getButtonText()) ;
             }
         });
     }
@@ -66,7 +135,7 @@ public class GameSequenceActivity extends ActionBarActivity {
         //requestCode == crazyGameRequestCode &&
         if (resultCode == RESULT_OK && data != null) {
             int score = data.getIntExtra(SCORE_CODE, 100);
-            scoreView.setText(Integer.toString(score));
+            scoreView.setText("Score Board: " + Integer.toString(score));
         }
     }
 

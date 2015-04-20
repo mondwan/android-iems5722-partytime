@@ -1,5 +1,6 @@
 package com.iems5722.partytime;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
@@ -185,6 +186,12 @@ public class PatternActivity extends ActionBarActivity {
                 downButton.setOnClickListener(null);
                 leftButton.setOnClickListener(null);
                 rightButton.setOnClickListener(null);
+
+                // return score
+                Intent output = new Intent();
+                output.putExtra(GameSequenceActivity.SCORE_CODE, score);
+                setResult(RESULT_OK, output);
+                finish();
             }
         }.start();
     }

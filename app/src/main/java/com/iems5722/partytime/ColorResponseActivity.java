@@ -31,7 +31,6 @@ public class ColorResponseActivity extends ActionBarActivity {
     private void genAndSetColor() {
         Random rn = new Random();
         int color = rn.nextInt(3);
-        Log.d(TAG, Integer.toString(color));
         switch(color) {
             case 0:
                 //Red

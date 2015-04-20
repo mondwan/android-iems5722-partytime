@@ -21,17 +21,21 @@ public class CountDownActivity extends ActionBarActivity {
 
         cdView = (TextView) this.findViewById(R.id.cdViewer);
 
-        cdView.setText("READY?");
+        // @TODO Be progress loading for game clients sync
         new CountDownTimer(4000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                cdView.setText("" + millisUntilFinished / 1000);
+//                cdView.setText("" + millisUntilFinished / 1000);
+                if (((int) millisUntilFinished/1000) == 3) {
+                    cdView.setText("GET!!");
+                } else if (((int) millisUntilFinished/1000) == 2) {
+                    cdView.setText("SeTTTTTTTTT~~~");
+                } else if (((int) millisUntilFinished/1000) == 1) {
+                    cdView.setText("Ready to GO??!!");
+                }
             }
 
             public void onFinish() {
-//                Intent output = new Intent();
-//                output.putExtra(GameSequenceActivity.SCORE_CODE, clickCounter);
-//                setResult(RESULT_OK, output);
                 finish();
             }
         }.start();

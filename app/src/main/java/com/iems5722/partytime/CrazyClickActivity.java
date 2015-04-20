@@ -30,9 +30,7 @@ public class CrazyClickActivity extends ActionBarActivity {
 
         counterView = (TextView) this.findViewById(R.id.counterView);
         counterView.setText("0");
-
         timeView = (TextView) this.findViewById(R.id.timeView);
-
         crazyButton = (Button) this.findViewById(R.id.crazyButton);
         crazyButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -57,6 +57,11 @@ public class GameServer {
         return udpPort;
     }
 
+    public void setServerIP(String serverIP) {
+        this.serverIP = serverIP;
+    }
+
+
     // List of ACTION_CODE for handler from GameController
     public static final int ON_RECEIVED_MSG = 0;
     public static final int ON_SERVER_DISCONNECTED = 1;

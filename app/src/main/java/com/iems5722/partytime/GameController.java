@@ -90,6 +90,7 @@ public class GameController {
     public static class JoinHostResponse {
         public boolean isSuccess;
         public String requestIP;
+        public String serverIP;
     }
 
     public static class UpdatePlayerListNotification {
@@ -148,6 +149,7 @@ public class GameController {
                             final JoinHostResponse res = new JoinHostResponse();
                             res.isSuccess = status;
                             res.requestIP = req.requestIP;
+                            res.serverIP = self.getServerIP();
 
                             // Forward the message to the register activity
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
@@ -185,6 +187,8 @@ public class GameController {
                                             "Join host request from |%s| received",
                                             res.requestIP)
                             );
+
+                            self.gs.setServerIP(res.serverIP);
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
                             msg.sendToTarget();
                         } else if (obj instanceof UpdatePlayerListNotification) {
@@ -317,6 +321,7 @@ public class GameController {
                     JoinHostResponse obj = new JoinHostResponse();
                     obj.isSuccess = false;
                     obj.requestIP = self.localIP;
+                    obj.serverIP = ipv4;
 
                     // Attach to the message
                     msg = self.activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);

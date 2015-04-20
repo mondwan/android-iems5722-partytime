@@ -49,6 +49,7 @@ public class StopwatchActivity extends ActionBarActivity {
         return currentTime;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +120,7 @@ public class StopwatchActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_stopwatch, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

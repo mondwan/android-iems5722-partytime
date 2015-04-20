@@ -121,8 +121,13 @@ public class GameController {
              */
             @Override
             public void handleMessage(Message inputMessage) {
+                // Setup a reference for this handler to access our activity
                 final GameController self = GameController.this;
+
+                // Setup a reference for the message payload
                 Object obj = inputMessage.obj;
+
+                // Determine type of the input message
                 switch (inputMessage.what) {
                     case GameServer.ON_CLIENT_DISCONNECTED:
                         if (obj instanceof UpdatePlayerListNotification) {
@@ -136,7 +141,10 @@ public class GameController {
                         break;
                     case GameServer.ON_RECEIVED_MSG:
                         if (obj instanceof JoinHostRequest) {
+                            // Classify the object to JoinHostRequest
                             JoinHostRequest req = (JoinHostRequest) obj;
+
+                            // Logging
                             Log.d(
                                     TAG,
                                     String.format(
@@ -144,8 +152,11 @@ public class GameController {
                                             req.requestIP
                                     )
                             );
+
+                            // Try to add player
                             boolean status = self.addPlayer(req.requestIP);
 
+                            // Create a JoinHostResponse message
                             final JoinHostResponse res = new JoinHostResponse();
                             res.isSuccess = status;
                             res.requestIP = req.requestIP;
@@ -155,8 +166,7 @@ public class GameController {
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
                             msg.sendToTarget();
 
-
-                            // Broadcast to peers for such JOIN_HOST_RESPONSE
+                            // Start a new thread to broadcast messages to peers
                             self.networkCallsThreadPool.execute(new Runnable() {
                                 @Override
                                 public void run() {
@@ -180,15 +190,21 @@ public class GameController {
                         } else if (obj instanceof GetPlayerListRequest) {
                             activityHandler.obtainMessage(GET_PLAYER_LIST_REQUEST, obj);
                         } else if (obj instanceof JoinHostResponse) {
+                            // Cast to JoinHostResponse
                             JoinHostResponse res = (JoinHostResponse) obj;
+
                             Log.d(
                                     TAG,
                                     String.format(
                                             "Join host request from |%s| received",
-                                            res.requestIP)
+                                            res.requestIP
+                                    )
                             );
 
+                            // Update GameServer IP
                             self.gs.setServerIP(res.serverIP);
+
+                            // Forward message to the registered activity
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
                             msg.sendToTarget();
                         } else if (obj instanceof UpdatePlayerListNotification) {
@@ -204,6 +220,7 @@ public class GameController {
                             // Add elements in the request
                             self.playerList.addAll(notification.players);
 
+                            // Forward message to register activity
                             Message msg =
                                     activityHandler.obtainMessage(
                                             UPDATE_PLAYER_LIST_NOTIFICATION,

@@ -66,6 +66,10 @@
             android:name=".CountDownActivity"
             android:label="@string/title_activity_count_down" >
         </activity>
+        <activity
+            android:name=".SendScoresActivity"
+            android:label="@string/SendScoresActivity_name" >
+        </activity>
     </application>
 
 </manifest>

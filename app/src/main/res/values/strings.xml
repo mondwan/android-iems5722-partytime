@@ -35,4 +35,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_game_sequence">GameSequenceActivity</string>
     <string name="title_activity_count_down">CountDownActivity</string>
+
+    <string name="SendScoresActivity_name">SendScoresActivity</string>
 </resources>

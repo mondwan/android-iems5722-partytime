@@ -103,8 +103,8 @@ public class LobbyActivity extends PortraitOnlyActivity {
         this.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LobbyActivity.this, StopwatchActivity.class);
-                Log.d(TAG, "stopwatch button clicked");
+                Intent intent = new Intent(LobbyActivity.this, SendScoresActivity.class);
+                Log.d(TAG, "SendScores button clicked");
                 startActivity(intent);
             }
         });

@@ -153,10 +153,6 @@ public class GameController {
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, res);
                             msg.sendToTarget();
 
-                            // Stop broadcast if this JoinHostRequest is not success
-                            if (!res.isSuccess) {
-                                return;
-                            }
 
                             // Broadcast to peers for such JOIN_HOST_RESPONSE
                             self.networkCallsThreadPool.execute(new Runnable() {
@@ -164,6 +160,11 @@ public class GameController {
                                 public void run() {
                                     // Broadcast the JoinHostRequest
                                     self.gs.broadcastMessage(res);
+
+                                    // Stop broadcast UpdateNotification if request is not success
+                                    if (!res.isSuccess) {
+                                        return;
+                                    }
 
                                     // Broadcast the UpdatePlayerListNotification
                                     UpdatePlayerListNotification notification =
@@ -401,7 +402,7 @@ public class GameController {
         // Get # of player
         int numOfPlayer = this.playerList.size();
 
-        if (numOfPlayer <= MAX_PLAYERS) {
+        if (numOfPlayer < MAX_PLAYERS) {
             // Fetch username
             String username = this.listOfUsername.get(numOfPlayer);
 

@@ -17,6 +17,7 @@ import android.widget.Button;
 public class HomeActivity extends Activity {
     private static final String TAG = HomeActivity.class.getClass().getSimpleName();
 
+
     protected WifiManager wm;
 
     protected ConnectivityManager cm;
@@ -26,6 +27,7 @@ public class HomeActivity extends Activity {
 
     protected class SetupGameServerException extends Exception {
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "host button clicked");
+
                 HomeActivity self = HomeActivity.this;
 
                 try {

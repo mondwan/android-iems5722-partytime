@@ -3,6 +3,7 @@ package com.iems5722.partytime;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,12 +27,15 @@ public class LobbyActivity extends Activity {
 
     // Handler reference
     protected Handler mHandler = null;
-
+    protected MediaPlayer mp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
+        mp = MediaPlayer.create(LobbyActivity.this,R.raw.mario);
+        mp.setLooping(true);
+        mp.start();
         // Setup reference for our properties
         this.startButton = (Button) this.findViewById(R.id.startButton);
         this.hostIP = (TextView) this.findViewById(R.id.hostIP);
@@ -93,12 +97,14 @@ public class LobbyActivity extends Activity {
         // Write Server IP
         String ipv4 = this.gameController.getServerIP();
         this.hostIP.setText(ipv4);
+
     }
 
     @Override
     public void onBackPressed() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Quit Lobby");
+        mp.stop();
         dialog.setMessage(
                 "Are you sure you want to quit the lobby?"
         );

@@ -1,5 +1,6 @@
 package com.iems5722.partytime;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
@@ -134,6 +135,11 @@ public class ColorResponseActivity extends ActionBarActivity {
                 redButton.setOnClickListener(null);
                 greenButton.setOnClickListener(null);
                 blueButton.setOnClickListener(null);
+
+                Intent output = new Intent();
+                output.putExtra(GameSequenceActivity.SCORE_CODE, score);
+                setResult(RESULT_OK, output);
+                finish();
             }
         }.start();
     }

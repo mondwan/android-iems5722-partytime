@@ -45,6 +45,7 @@ public class HomeActivity extends Activity {
         Button crazyClickButton = (Button) this.findViewById(R.id.crazyClickButton);
         Button colorResponseButton = (Button) this.findViewById(R.id.colorResponse);
         Button patternButton = (Button) this.findViewById(R.id.patternButton);
+        Button queueButton = (Button) this.findViewById(R.id.queueButton);
 
         // Setup onclick listener for those buttons
         hostButton.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +166,15 @@ public class HomeActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, PatternActivity.class);
                 Log.d(TAG, "pattern button clicked");
+                startActivity(intent);
+            }
+        });
+
+        queueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, GameSequenceActivity.class);
+                Log.d(TAG, "queue button clicked");
                 startActivity(intent);
             }
         });

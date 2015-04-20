@@ -57,6 +57,14 @@
             android:name=".PatternActivity"
             android:label="@string/title_activity_pattern" >
         </activity>
+        <activity
+            android:name=".GameSequenceActivity"
+            android:label="@string/title_activity_game_sequence" >
+        </activity>
+        <activity
+            android:name=".CountDownActivity"
+            android:label="@string/title_activity_count_down" >
+        </activity>
     </application>
 
 </manifest>

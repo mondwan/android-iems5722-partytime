@@ -54,6 +54,11 @@ public class CrazyClickActivity extends ActionBarActivity {
             public void onFinish() {
                 timeView.setText("Finish!");
                 isFinish = true;
+
+                Intent output = new Intent();
+                output.putExtra(GameSequenceActivity.SCORE_CODE, clickCounter);
+                setResult(RESULT_OK, output);
+                finish();
             }
         }.start();
     }

@@ -67,5 +67,13 @@
         android:layout_below="@+id/colorResponse"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Game Queue"
+        android:id="@+id/queueButton"
+        android:layout_below="@+id/patternButton"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

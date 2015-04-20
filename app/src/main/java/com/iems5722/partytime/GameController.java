@@ -207,9 +207,6 @@ public class GameController {
                                     )
                             );
 
-                            // Update GameServer IP
-                            self.gs.setServerIP(res.serverIP);
-
                             // Forward message to the registered activity
                             Message msg = activityHandler.obtainMessage(JOIN_HOST_RESPONSE, obj);
                             msg.sendToTarget();

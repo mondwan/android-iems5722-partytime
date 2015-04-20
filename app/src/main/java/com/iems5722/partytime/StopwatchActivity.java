@@ -1,145 +1,136 @@
 package com.iems5722.partytime;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
+import android.os.CountDownTimer;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-//import android.widget.Button;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+
 import java.util.Random;
 
 
-/**
- * Created by Kevin on 16/4/15.
- * Simple StopWatch
- * */
+public class StopwatchActivity extends PortraitOnlyActivity {
 
- public class StopwatchActivity extends PortraitOnlyActivity {
-    private static final String TAG = StopwatchActivity.class.getClass().getSimpleName();
-    protected MediaPlayer mp, warn;
-    long init,now,time,paused;
-    TextView display;
-    TextView rule;
-    Handler handler;
-    int randnum;
-    int score;
-    protected GameController gameController = null;
+    TextView timeView, scoreView, instructionView;
+    Button stopButton;
 
+
+    final int BUFFER_TIME = 5000;
+    int targetTime = 5000; // in millis second
+
+    int score = 0;
+
+    private float getRemainTime(long untilFinished) {
+        return (float) (targetTime - untilFinished + BUFFER_TIME) / 1000;
+    }
+
+    private int initRandtime() {
+        int max = 6;
+        int min = 3;
+
+        Random random = new Random();
+        targetTime = (random.nextInt(max - min) + min) * 1000;
+        return targetTime;
+    }
+
+    String currentTime = "";
+
+    private void setCurrentTime(String time) {
+        this.currentTime = time;
+    }
+
+    private String getCurrentTime() {
+        return currentTime;
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
-        final ToggleButton passTog = (ToggleButton) findViewById(R.id.onoff);
-        display = (TextView) findViewById(R.id.display);
-        rule = (TextView) findViewById(R.id.game_rule);
-        handler = new Handler();
-        randNumGen();
-        rule.setText("Stop the timer after " + randnum + " seconds!");
-        mp = MediaPlayer.create(StopwatchActivity.this,R.raw.ticktak);
-        mp.setLooping(true);
-        warn = MediaPlayer.create(StopwatchActivity.this,R.raw.warning);
-        warn.setLooping(true);
-        this.gameController = GameController.getInstance();
-        Log.d(TAG, "onCreate");
+
+        timeView = (TextView) this.findViewById(R.id.timeView);
+        scoreView = (TextView) this.findViewById(R.id.scoreView);
+        stopButton = (Button) this.findViewById(R.id.stopButton);
+        instructionView = (TextView) this.findViewById(R.id.instructionView);
+
+        // init
+        instructionView.setText("I would like to be close to: " + initRandtime() / 1000);
 
 
+        String timeShow = "";
+        final CountDownTimer cdtimer = new CountDownTimer(targetTime + BUFFER_TIME, 10) {
 
-        final Runnable updater = new Runnable() {
-            @Override
-            public void run() {
-                if (passTog.isChecked()) {
-                    mp.start();
-                    now = System.currentTimeMillis();
-                    time = now - init;
-                    String displaymillisec = Long.toString(time);
-                    String displaysec = "00";
-                    int seconds = 0;
-                    if (time > 1000){
-                        if(time > (randnum - 3) * 1000){
-                            mp.setVolume(30,30);
-                            warn.start();
-                            display.setTextColor(Color.RED);
-                        }
+            public void onTick(long millisUntilFinished) {
 
-                        seconds = (int) (time / 1000) % 60 ;
-                        displaymillisec = Long.toString(time);
-                        displaymillisec = displaymillisec.substring(displaymillisec.length() - 3);
-                        displaysec = Integer.toString(seconds);
-                        if (seconds < 10){
-                            displaysec = "0" + displaysec;
-                        }
+                String timeShow = String.format("%.3f", getRemainTime(millisUntilFinished));
+                setCurrentTime(timeShow);
+                timeView.setText("Time: " + timeShow);
+            }
 
-                    }
+            public void onFinish() {
+                timeView.setText("End of World");
 
-                    // Some effect
-                    if (((int) randnum - seconds) < 2) display.setTextColor(Color.RED);
-                    display.setText(displaysec + "." + displaymillisec);
-                    handler.postDelayed(this, 30);
-                }
-                else{
-                    showElapsedTime(time);
-
-                    // End the activity
-                    Intent output = new Intent();
-                    output.putExtra(GameSequenceActivity.SCORE_CODE, score);
-                    setResult(RESULT_OK, output);
-                    finish();
-                }
+                Intent output = new Intent();
+                score = 0;
+                output.putExtra(GameSequenceActivity.SCORE_CODE, score);
+                setResult(RESULT_OK, output);
+                finish();
             }
         };
-        passTog.setOnClickListener(new View.OnClickListener() {
 
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                Log.d(TAG, "Click received in onClick.");
-                init = System.currentTimeMillis();
-                handler.post(updater);
+                cdtimer.cancel();
+                timeView.setText(getCurrentTime());
+                int diffToTarget = Math.abs((int) (Float.parseFloat(getCurrentTime())*1000) - targetTime);
+
+                final int timeRatio = 500;
+                score = timeRatio - diffToTarget;
+                if (score < 0)
+                    score = 0;
+                else {
+                    score = (int) ((score * 100) / timeRatio);
+                }
+
+                scoreView.setText("Score Board: " + score);
+
+                Intent output = new Intent();
+                output.putExtra(GameSequenceActivity.SCORE_CODE, score);
+                setResult(RESULT_OK, output);
+                finish();
             }
         });
 
 
+        cdtimer.start();
     }
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "Click received in onPause.");
-        super.onPause();
-        paused = System.currentTimeMillis();
 
-    }
 
     @Override
-    protected void onResume() {
-        Log.d(TAG, "Click received in onResume.");
-        super.onResume();
-        init += System.currentTimeMillis() - paused;
-    }
-    private void showElapsedTime(Long stoptime) {
-        warn.stop();
-        mp.stop();
-        Integer mstoptime = (int) (long) stoptime;
-        Log.d(TAG, "stoppedMilliseconds: " + mstoptime);
-        int offset = randnum * 1000 - Math.abs(randnum * 1000 - mstoptime);
-        Log.d(TAG, "offset: " + offset);
-        score = Math.round(offset / randnum);
-        Log.d(TAG, "scores: " + score);
-        this.gameController.sendMsg(score);
-        Toast.makeText(StopwatchActivity.this, "Your scores is " + score,
-                Toast.LENGTH_SHORT).show();
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_stopwatch, menu);
+        return true;
     }
 
-    private void randNumGen(){
-        int max = 10;
-        int min = 5;
 
-        Random random = new Random();
-//        randnum = random.nextInt(max - min + 1) + min;
-        randnum = random.nextInt(max-min) + min;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
-
 }

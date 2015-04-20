@@ -66,7 +66,6 @@ public class GameController {
 
     // List of ACTION_CODE for handlers from Activity
     public static final int JOIN_HOST_REQUEST = 2;
-    public static final int LEAVE_HOST_REQUEST = 3;
     public static final int GET_PLAYER_LIST_REQUEST = 4;
     public static final int JOIN_HOST_RESPONSE = 5;
     public static final int UPDATE_PLAYER_LIST_NOTIFICATION = 6;
@@ -75,10 +74,6 @@ public class GameController {
 
     // Define classes which will be transmitted back and forth in Kryonet network
     public static class JoinHostRequest {
-        public String requestIP;
-    }
-
-    public static class LeaveHostRequest {
         public String requestIP;
     }
 
@@ -264,8 +259,6 @@ public class GameController {
                     }
                 }
             });
-        } else if (gameData instanceof LeaveHostRequest) {
-            activityHandler.obtainMessage(LEAVE_HOST_REQUEST, gameData);
         } else if (gameData instanceof GetPlayerListRequest) {
             activityHandler.obtainMessage(GET_PLAYER_LIST_REQUEST, gameData);
         } else if (gameData instanceof JoinHostResponse) {

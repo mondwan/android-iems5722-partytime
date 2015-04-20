@@ -309,7 +309,6 @@ public class GameServer {
      */
     protected void register(Kryo instance) {
         instance.register(GameController.JoinHostRequest.class);
-        instance.register(GameController.LeaveHostRequest.class);
         instance.register(GameController.GetPlayerListRequest.class);
         instance.register(GameController.JoinHostResponse.class);
         instance.register(GameController.UpdatePlayerListNotification.class);

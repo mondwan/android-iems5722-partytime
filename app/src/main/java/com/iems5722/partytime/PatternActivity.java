@@ -2,12 +2,8 @@ package com.iems5722.partytime;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.CountDownTimer;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class PatternActivity extends ActionBarActivity {
+public class PatternActivity extends PortraitOnlyActivity {
 
     final String TAG = "Pattern Activity";
     final int gameTime = 10;
@@ -32,7 +28,7 @@ public class PatternActivity extends ActionBarActivity {
     private String genRandomArrow() {
         int action = new Random().nextInt(4);
         String ret = "";
-        switch(action) {
+        switch (action) {
             case 0:
                 //Up
                 ret = "up";
@@ -55,11 +51,12 @@ public class PatternActivity extends ActionBarActivity {
         }
         return ret;
     }
+
     private void genAndSetArrow() {
         targetArray.clear();
         for (int i = 0; i < maxArrowSize; i++) {
             String newColor = genRandomArrow();
-            while (i > 0 && newColor == targetArray.get(i-1)) {
+            while (i > 0 && newColor == targetArray.get(i - 1)) {
                 newColor = genRandomArrow();
             }
             targetArray.add(newColor);
@@ -75,6 +72,7 @@ public class PatternActivity extends ActionBarActivity {
     }
 
     int checkCounter = 0;
+
     private Boolean checkInputArrow(String arrow) {
         Boolean ret = false;
         if (targetArray.get(checkCounter).equals(arrow)) {
@@ -128,16 +126,20 @@ public class PatternActivity extends ActionBarActivity {
         timeView = (TextView) this.findViewById(R.id.timeView);
         instructionView = (TextView) this.findViewById(R.id.instructionView);
 
-        upButton = (Button) this.findViewById(R.id.upButton); upButton.setBackgroundColor(Color.LTGRAY);
-        downButton = (Button) this.findViewById(R.id.downButton); downButton.setBackgroundColor(Color.LTGRAY);
-        leftButton = (Button) this.findViewById(R.id.leftButton); leftButton.setBackgroundColor(Color.LTGRAY);
-        rightButton = (Button) this.findViewById(R.id.rightButton); rightButton.setBackgroundColor(Color.LTGRAY);
+        upButton = (Button) this.findViewById(R.id.upButton);
+        upButton.setBackgroundColor(Color.LTGRAY);
+        downButton = (Button) this.findViewById(R.id.downButton);
+        downButton.setBackgroundColor(Color.LTGRAY);
+        leftButton = (Button) this.findViewById(R.id.leftButton);
+        leftButton.setBackgroundColor(Color.LTGRAY);
+        rightButton = (Button) this.findViewById(R.id.rightButton);
+        rightButton.setBackgroundColor(Color.LTGRAY);
 
         // init Screen
         genAndSetArrow();
         showArrow();
 
-        upButton.setOnClickListener(new View.OnClickListener(){
+        upButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -146,7 +148,7 @@ public class PatternActivity extends ActionBarActivity {
             }
         });
 
-        downButton.setOnClickListener(new View.OnClickListener(){
+        downButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -155,7 +157,7 @@ public class PatternActivity extends ActionBarActivity {
             }
         });
 
-        leftButton.setOnClickListener(new View.OnClickListener(){
+        leftButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -164,7 +166,7 @@ public class PatternActivity extends ActionBarActivity {
             }
         });
 
-        rightButton.setOnClickListener(new View.OnClickListener(){
+        rightButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -194,28 +196,5 @@ public class PatternActivity extends ActionBarActivity {
                 finish();
             }
         }.start();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_pattern, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

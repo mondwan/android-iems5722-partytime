@@ -1,6 +1,5 @@
 package com.iems5722.partytime;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class JoinHostActivity extends Activity {
+public class JoinHostActivity extends PortraitOnlyActivity {
     private static final String TAG = JoinHostActivity.class.getClass().getSimpleName();
 
     // View references

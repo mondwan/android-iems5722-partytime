@@ -1,6 +1,5 @@
 package com.iems5722.partytime;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends PortraitOnlyActivity {
     private static final String TAG = HomeActivity.class.getClass().getSimpleName();
 
 

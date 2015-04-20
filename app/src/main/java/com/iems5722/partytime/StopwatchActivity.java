@@ -20,7 +20,7 @@ import java.util.Random;
  * Simple StopWatch
  * */
 
- public class StopwatchActivity extends Activity {
+ public class StopwatchActivity extends PortraitOnlyActivity {
     private static final String TAG = StopwatchActivity.class.getClass().getSimpleName();
     protected MediaPlayer mp, warn;
     long init,now,time,paused;

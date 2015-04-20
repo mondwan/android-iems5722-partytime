@@ -1,12 +1,7 @@
 package com.iems5722.partytime;
 
 import android.content.Intent;
-import android.os.CountDownTimer;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,7 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class GameSequenceActivity extends ActionBarActivity {
+public class GameSequenceActivity extends PortraitOnlyActivity {
 
     final String TAG = "GameSequence";
     final public static String SCORE_CODE = "SCORE_CODE";
@@ -75,7 +70,7 @@ public class GameSequenceActivity extends ActionBarActivity {
     }
 
     private void startChosenGame(int index) {
-        switch(index) {
+        switch (index) {
             case 0:
                 //CrazyClick
                 startCrazyClickGame();
@@ -99,7 +94,7 @@ public class GameSequenceActivity extends ActionBarActivity {
 
     private String getButtonText() {
         String ret = "";
-        switch(gameIndex) {
+        switch (gameIndex) {
             case 0:
                 //CrazyClick
                 ret = "CrazyClick";
@@ -134,7 +129,7 @@ public class GameSequenceActivity extends ActionBarActivity {
 
         // init
         initGameQueue();
-        testButton.setText("Click to start next game: " + getButtonText()) ;
+        testButton.setText("Click to start next game: " + getButtonText());
 
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +141,7 @@ public class GameSequenceActivity extends ActionBarActivity {
                     startChosenGame(gameQueue.get(gameIndex++));
                 }
                 startCD();
-                testButton.setText("Click to start next game: " + getButtonText()) ;
+                testButton.setText("Click to start next game: " + getButtonText());
             }
         });
     }
@@ -158,28 +153,5 @@ public class GameSequenceActivity extends ActionBarActivity {
             int score = data.getIntExtra(SCORE_CODE, 100);
             scoreView.setText("Score Board: " + Integer.toString(score));
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_game_sequence, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

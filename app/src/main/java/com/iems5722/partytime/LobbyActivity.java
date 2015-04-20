@@ -1,6 +1,5 @@
 package com.iems5722.partytime;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class LobbyActivity extends Activity {
+public class LobbyActivity extends PortraitOnlyActivity {
     private static final String TAG = LobbyActivity.class.getClass().getSimpleName();
 
     protected Button startButton = null;

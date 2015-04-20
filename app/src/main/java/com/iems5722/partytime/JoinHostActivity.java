@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -90,6 +91,13 @@ public class JoinHostActivity extends Activity {
                                         obj = (GameController.JoinHostResponse) inputMessage.obj;
                                 if (!obj.isSuccess) {
                                     throw new FailToConnectToGameServerException();
+                                } else {
+                                    // Go to Lobby activity
+                                    Intent intent = new Intent(
+                                            JoinHostActivity.this,
+                                            LobbyActivity.class
+                                    );
+                                    startActivity(intent);
                                 }
                         }
                     } catch (FailToConnectToGameServerException e) {

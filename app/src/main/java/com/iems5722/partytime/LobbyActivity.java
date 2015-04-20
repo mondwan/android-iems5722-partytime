@@ -66,6 +66,10 @@ public class LobbyActivity extends Activity {
                         if (obj.isSuccess) {
                             self.playerListAdapter.notifyDataSetChanged();
                         }
+                        break;
+                    case GameController.UPDATE_PLAYER_LIST_NOTIFICATION:
+                        self.playerListAdapter.notifyDataSetChanged();
+                        break;
                 }
             }
         };

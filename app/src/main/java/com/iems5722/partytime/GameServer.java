@@ -12,6 +12,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Besides holding information for communicating with peers (other players), it also provides
@@ -122,10 +123,12 @@ public class GameServer {
              * @param c Connection
              */
             public void disconnected(Connection c) {
-                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
-                Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
+//                String ipv4 = c.getRemoteAddressTCP().getAddress().getHostAddress();
+//                Log.d(TAG, String.format("Disconnection from ip |%s|", ipv4));
+                // TODO: c will be null after disconnection, we need to figure out how to get back
+                // the disconnected ip
 
-                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, ipv4);
+                Message msg = handler.obtainMessage(ON_CLIENT_DISCONNECTED, "unknown");
                 msg.sendToTarget();
             }
         });
@@ -235,6 +238,15 @@ public class GameServer {
     }
 
     /**
+     * API for GameController to broadcast message to the clients
+     *
+     * @param obj Object
+     */
+    public void broadcastMessage(Object obj) {
+        this.server.sendToAllTCP(obj);
+    }
+
+    /**
      * A method registers all classes which be sent over the Kryonet network
      *
      * @param instance Kryo
@@ -247,5 +259,7 @@ public class GameServer {
         instance.register(GameController.UpdatePlayerListNotification.class);
         instance.register(GameController.KickedNotification.class);
         instance.register(GameController.ServerDownNotification.class);
+        instance.register(java.util.ArrayList.class);
+        instance.register(GamePlayer.class);
     }
 }

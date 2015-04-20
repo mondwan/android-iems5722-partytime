@@ -6,17 +6,40 @@ package com.iems5722.partytime;
 public class GamePlayer {
     protected String username;
     protected String ip;
+    protected int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getUsername() {
         return username;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getIp() {
         return ip;
     }
 
-    public GamePlayer(String ip, String username) {
+    // Create an empty constructor required by Kryonet
+    public GamePlayer() {
+
+    }
+
+    public GamePlayer(String ip, String username, int pos) {
         this.ip = ip;
         this.username = username;
+        this.position = pos;
     }
 }

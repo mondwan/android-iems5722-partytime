@@ -53,16 +53,37 @@ public class ColorResponseActivity extends ActionBarActivity {
         }
     }
 
-    private void checkColorCorrect(int color) {
+    private void buttonChangeBG(final Button button, final Boolean flag) {
+        new CountDownTimer(100, 10) {
+
+            public void onTick(long millisUntilFinished) {
+                if (flag) {
+                    button.setBackgroundColor(Color.GREEN);
+                } else {
+                    button.setBackgroundColor(Color.RED);
+                }
+            }
+
+            public void onFinish() {
+                button.setBackgroundColor(Color.LTGRAY);
+            }
+        }.start();
+    }
+
+    private Boolean checkColorCorrect(int color) {
+        Boolean ret = false;
         if (targetColor == color) {
             correctCounter++;
             genAndSetColor();
             score++;
+            ret = true;
         } else {
             incorrectCounter++;
             score--;
+            ret = false;
         }
         scoreView.setText("Score: " + Integer.toString(score));
+        return ret;
     }
 
     @Override
@@ -82,21 +103,21 @@ public class ColorResponseActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 int color = Color.RED;
-                checkColorCorrect(color);
+                buttonChangeBG(redButton, checkColorCorrect(color));
             }
         });
         greenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int color = Color.GREEN;
-                checkColorCorrect(color);
+                buttonChangeBG(greenButton, checkColorCorrect(color));
             }
         });
         blueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int color = Color.BLUE;
-                checkColorCorrect(color);
+                buttonChangeBG(blueButton, checkColorCorrect(color));
             }
         });
 

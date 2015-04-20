@@ -100,6 +100,23 @@ public class PatternActivity extends ActionBarActivity {
         }
     }
 
+    private void buttonChangeBG(final Button button, final Boolean flag) {
+        new CountDownTimer(100, 10) {
+
+            public void onTick(long millisUntilFinished) {
+                if (flag) {
+                    button.setBackgroundColor(Color.GREEN);
+                } else {
+                    button.setBackgroundColor(Color.RED);
+                }
+            }
+
+            public void onFinish() {
+                button.setBackgroundColor(Color.LTGRAY);
+            }
+        }.start();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,10 +126,10 @@ public class PatternActivity extends ActionBarActivity {
         timeView = (TextView) this.findViewById(R.id.timeView);
         instructionView = (TextView) this.findViewById(R.id.instructionView);
 
-        upButton = (Button) this.findViewById(R.id.upButton);
-        downButton = (Button) this.findViewById(R.id.downButton);
-        leftButton = (Button) this.findViewById(R.id.leftButton);
-        rightButton = (Button) this.findViewById(R.id.rightButton);
+        upButton = (Button) this.findViewById(R.id.upButton); upButton.setBackgroundColor(Color.LTGRAY);
+        downButton = (Button) this.findViewById(R.id.downButton); downButton.setBackgroundColor(Color.LTGRAY);
+        leftButton = (Button) this.findViewById(R.id.leftButton); leftButton.setBackgroundColor(Color.LTGRAY);
+        rightButton = (Button) this.findViewById(R.id.rightButton); rightButton.setBackgroundColor(Color.LTGRAY);
 
         // init Screen
         genAndSetArrow();
@@ -122,7 +139,8 @@ public class PatternActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                checkInputArrow("up");
+                Boolean flag = checkInputArrow("up");
+                buttonChangeBG(upButton, flag);
             }
         });
 
@@ -130,7 +148,8 @@ public class PatternActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                checkInputArrow("down");
+                Boolean flag = checkInputArrow("down");
+                buttonChangeBG(downButton, flag);
             }
         });
 
@@ -138,7 +157,8 @@ public class PatternActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                checkInputArrow("left");
+                Boolean flag = checkInputArrow("left");
+                buttonChangeBG(leftButton, flag);
             }
         });
 
@@ -146,7 +166,8 @@ public class PatternActivity extends ActionBarActivity {
 
             @Override
             public void onClick(View v) {
-                checkInputArrow("right");
+                Boolean flag = checkInputArrow("right");
+                buttonChangeBG(rightButton, flag);
             }
         });
 

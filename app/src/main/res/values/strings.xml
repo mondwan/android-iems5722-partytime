@@ -24,4 +24,7 @@
     <string name="status_connecting">Connecting to the server. Please wait</string>
     <string name="status_connect_failure">Unable to connect given host. Please try again</string>
     <string name="status_invalid_ipv4">Invalid IPV4. Please try again</string>
+
+    <!--CrazyClickActivity-->
+    <string name="title_activity_crazy_click">CrazyClickActivity</string>
 </resources>

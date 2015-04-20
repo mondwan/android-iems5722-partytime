@@ -45,6 +45,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.iems5722.partytime.HomeActivity" />
         </activity>
+        <activity
+            android:name=".CrazyClickActivity"
+            android:label="@string/title_activity_crazy_click" >
+        </activity>
     </application>
 
 </manifest>

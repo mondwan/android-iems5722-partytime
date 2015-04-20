@@ -42,6 +42,7 @@ public class HomeActivity extends Activity {
         Button hostButton = (Button) this.findViewById(R.id.hostButton);
         Button joinButton = (Button) this.findViewById(R.id.joinButton);
         Button stopwatchButton = (Button) this.findViewById(R.id.stopwatchButton);
+        Button crazyClickButton = (Button) this.findViewById(R.id.crazyClickButton);
 
         // Setup onclick listener for those buttons
         hostButton.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +138,15 @@ public class HomeActivity extends Activity {
                 startActivity(intent);
             }
         });
+        crazyClickButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, CrazyClickActivity.class);
+                Log.d(TAG, "crazy button clicked");
+                startActivity(intent);
+            }
+        });
+    }
     }
 
     @Override

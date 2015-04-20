@@ -59,5 +59,13 @@
         android:layout_centerHorizontal="true"
         android:singleLine="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PATTERN GAME"
+        android:id="@+id/patternButton"
+        android:layout_below="@+id/colorResponse"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

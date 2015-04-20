@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.iems5722.partytime.PatternActivity"
+    android:id="@+id/relativeLayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show me the time"
+        android:id="@+id/timeView"
+        android:autoText="false"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="59dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score board"
+        android:id="@+id/scoreView"
+        android:singleLine="false"
+        android:layout_below="@+id/timeView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/instructionView"
+        android:singleLine="false"
+        android:text="↑ ↑ ↓ ↓ ← ← → → A B A B"
+        android:layout_above="@+id/upButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="↑"
+        android:id="@+id/upButton"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="←"
+        android:id="@+id/leftButton"
+        android:layout_below="@+id/upButton"
+        android:layout_toLeftOf="@+id/upButton"
+        android:layout_toStartOf="@+id/upButton" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="→"
+        android:id="@+id/rightButton"
+        android:layout_below="@+id/upButton"
+        android:layout_toRightOf="@+id/upButton"
+        android:layout_toEndOf="@+id/upButton" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="↓"
+        android:id="@+id/downButton"
+        android:layout_below="@+id/rightButton"
+        android:layout_toLeftOf="@+id/rightButton"
+        android:layout_toStartOf="@+id/rightButton" />
+
+</RelativeLayout>

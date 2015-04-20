@@ -53,6 +53,10 @@
             android:name=".ColorResponseActivity"
             android:label="@string/title_activity_color_response" >
         </activity>
+        <activity
+            android:name=".PatternActivity"
+            android:label="@string/title_activity_pattern" >
+        </activity>
     </application>
 
 </manifest>

@@ -58,10 +58,30 @@ public class LobbyActivity extends Activity {
              */
             @Override
             public void handleMessage(Message inputMessage) {
-                LobbyActivity self = LobbyActivity.this;
+                final LobbyActivity self = LobbyActivity.this;
                 switch (inputMessage.what) {
                     case GameController.UPDATE_PLAYER_LIST_NOTIFICATION:
                         self.playerListAdapter.notifyDataSetChanged();
+                        break;
+                    case GameController.SERVER_DOWN_NOTFICATION:
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(self);
+                        dialog.setTitle("Lobby closed");
+                        dialog.setMessage(
+                                "Lobby has been closed by the host."
+                        );
+                        dialog.setIcon(android.R.drawable.ic_dialog_alert);
+                        dialog.setCancelable(false);
+                        dialog.setPositiveButton(
+                                "OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Back to HomeActivity
+                                        self.finish();
+                                    }
+                                }
+                        );
+
+                        dialog.show();
                         break;
                 }
             }

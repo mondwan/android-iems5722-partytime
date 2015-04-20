@@ -249,6 +249,7 @@ public class GameServer {
              * @param c Connection
              */
             public void disconnected(Connection c) {
+                Log.d(TAG, "Server disconnected");
                 Message msg = handler.obtainMessage(ON_SERVER_DISCONNECTED);
                 msg.sendToTarget();
             }

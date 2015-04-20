@@ -157,9 +157,12 @@ public class GameController {
                         });
                         break;
                     case GameServer.ON_SERVER_DISCONNECTED:
-                        if (obj instanceof ServerDownNotification) {
-                            activityHandler.obtainMessage(SERVER_DOWN_NOTFICATION, obj);
-                        }
+                        // Forward the message to the registered handler
+                        msg = activityHandler.obtainMessage(SERVER_DOWN_NOTFICATION);
+                        msg.sendToTarget();
+
+                        // Stop our client here since server has been shutdown
+                        self.stopGameServer();
                         break;
                     case GameServer.ON_RECEIVED_MSG:
                         if (obj instanceof JoinHostRequest) {

@@ -29,6 +29,7 @@ import java.util.Random;
     Handler handler;
     int randnum;
     int score;
+    protected GameController gameController = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ import java.util.Random;
         mp.setLooping(true);
         warn = MediaPlayer.create(StopwatchActivity.this,R.raw.warning);
         warn.setLooping(true);
+        this.gameController = GameController.getInstance();
         Log.d(TAG, "onCreate");
 
 
@@ -124,8 +126,9 @@ import java.util.Random;
         Log.d(TAG, "offset: " + offset);
         score = Math.round(offset / randnum);
         Log.d(TAG, "scores: " + score);
-//        Toast.makeText(StopwatchActivity.this, "Your scores is " + scores,
-//                Toast.LENGTH_SHORT).show();
+        this.gameController.sendMsg(score);
+        Toast.makeText(StopwatchActivity.this, "Your scores is " + score,
+                Toast.LENGTH_SHORT).show();
 
     }
 

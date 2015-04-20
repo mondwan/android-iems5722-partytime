@@ -99,6 +99,10 @@ public class GameController {
         //TODO work out properties here
     }
 
+    public static class UpdateScoresNotification{
+        public int scores;
+    }
+
     /**
      * Singleton implementation
      */
@@ -431,6 +435,23 @@ public class GameController {
 
             // Empty player list
             this.playerList.clear();
+        }
+    }
+
+    public void sendMsg(int scores){
+        if (this.isHost()){
+            //server
+            Log.d(TAG, String.format("Sever(sendMsg): " + scores));
+            UpdateScoresNotification updateScores = new UpdateScoresNotification();
+            updateScores.scores = scores;
+            this.gs.broadcastMessage(updateScores);
+        }
+        else{
+            //client
+            Log.d(TAG, String.format("Client(sendMsg): " + scores));
+            UpdateScoresNotification updateScores = new UpdateScoresNotification();
+            updateScores.scores = scores;
+            this.gs.sendMessageToServer(updateScores);
         }
     }
 

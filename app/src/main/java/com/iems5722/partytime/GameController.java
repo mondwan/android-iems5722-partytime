@@ -170,7 +170,7 @@ public class GameController {
                             self.networkCallsThreadPool.execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // Broadcast the JoinHostRequest
+                                    // Broadcast the JoinHostResponse
                                     self.gs.broadcastMessage(res);
 
                                     // Stop broadcast UpdateNotification if request is not success

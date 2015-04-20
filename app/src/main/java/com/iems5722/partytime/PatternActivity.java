@@ -118,7 +118,6 @@ public class PatternActivity extends ActionBarActivity {
         genAndSetArrow();
         showArrow();
 
-
         upButton.setOnClickListener(new View.OnClickListener(){
 
             @Override

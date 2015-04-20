@@ -30,4 +30,7 @@
 
     <!--ColorResponseActivity-->
     <string name="title_activity_color_response">ColorResponseActivity</string>
+    <string name="title_activity_pattern">PatternActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

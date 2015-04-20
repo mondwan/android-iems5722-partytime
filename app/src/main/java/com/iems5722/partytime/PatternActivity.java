@@ -56,11 +56,12 @@ public class PatternActivity extends ActionBarActivity {
     }
     private void genAndSetArrow() {
         targetArray.clear();
-        Random rn = new Random();
-        int color = rn.nextInt(3);
-        Log.d(TAG, Integer.toString(color));
         for (int i = 0; i < maxArrowSize; i++) {
-            targetArray.add(genRandomArrow());
+            String newColor = genRandomArrow();
+            while (i > 0 && newColor == targetArray.get(i-1)) {
+                newColor = genRandomArrow();
+            }
+            targetArray.add(newColor);
         }
     }
 

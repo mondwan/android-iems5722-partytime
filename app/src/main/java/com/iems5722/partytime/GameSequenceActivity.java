@@ -20,7 +20,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     // 3 for stopwatch
     final int maxGameNumber = 4;
 
-    final int crazyGameRequestCode = 0;
+    final int crazyGameCode = 0;
     final int colorResponseCode = 1;
     final int patternCode = 2;
     final int stopwatchCode = 3;
@@ -38,15 +38,15 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         // hardcode
         // @TODO random unique game queue
         gameQueue = new ArrayList<Integer>();
-        gameQueue.add(0);
-        gameQueue.add(1);
-        gameQueue.add(2);
-        gameQueue.add(3);
+        gameQueue.add(crazyGameCode);
+        gameQueue.add(colorResponseCode);
+        gameQueue.add(patternCode);
+        gameQueue.add(stopwatchCode);
     }
 
     private void startCrazyClickGame() {
         Intent intent = new Intent(GameSequenceActivity.this, CrazyClickActivity.class);
-        startActivityForResult(intent, crazyGameRequestCode);
+        startActivityForResult(intent, crazyGameCode);
     }
 
     private void startColorResponseGame() {
@@ -71,19 +71,19 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
 
     private void startChosenGame(int index) {
         switch (index) {
-            case 0:
+            case crazyGameCode:
                 //CrazyClick
                 startCrazyClickGame();
                 break;
-            case 1:
+            case colorResponseCode:
                 //ColorResponse
                 startColorResponseGame();
                 break;
-            case 2:
+            case patternCode:
                 //Pattern
                 startPatternGame();
                 break;
-            case 3:
+            case stopwatchCode:
                 //Stopwatch
                 startStopwatchGame();
                 break;
@@ -95,19 +95,19 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     private String getButtonText() {
         String ret = "";
         switch (gameIndex) {
-            case 0:
+            case crazyGameCode:
                 //CrazyClick
                 ret = "CrazyClick";
                 break;
-            case 1:
+            case colorResponseCode:
                 //ColorResponse
                 ret = "ColorResponse";
                 break;
-            case 2:
+            case patternCode:
                 //Pattern
                 ret = "Pattern";
                 break;
-            case 3:
+            case stopwatchCode:
                 //Stopwatch
                 ret = "Stopwatch";
                 break;

@@ -17,7 +17,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
     TextView timeView;
 
     Boolean isFinish = false;
-    int clickCounter = 0;
+    int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,8 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
             @Override
             public void onClick(View v) {
                 if (!isFinish) {
-                    clickCounter++;
-                    counterView.setText(Integer.toString(clickCounter));
+                    score++;
+                    counterView.setText(Integer.toString(score));
                 }
             }
         });
@@ -50,7 +50,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
                 isFinish = true;
 
                 Intent output = new Intent();
-                output.putExtra(GameSequenceActivity.SCORE_CODE, clickCounter);
+                output.putExtra(GameSequenceActivity.SCORE_CODE, score);
                 setResult(RESULT_OK, output);
                 finish();
             }

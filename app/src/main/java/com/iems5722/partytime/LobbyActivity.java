@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -62,6 +61,10 @@ public class LobbyActivity extends PortraitOnlyActivity {
 
                     dialog.show();
                     break;
+                case GameController.START_GAME_NOTIFICATION:
+                    // Jump to GameSequenceActivity
+                    self.startGame();
+                    break;
             }
         }
     }
@@ -103,14 +106,25 @@ public class LobbyActivity extends PortraitOnlyActivity {
         String ipv4 = this.gameController.getServerIP();
         this.hostIP.setText(ipv4);
 
-        this.startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LobbyActivity.this, GameSequenceActivity.class);
-                Log.d(TAG, "GameSequence button clicked");
-                startActivity(intent);
-            }
-        });
+        // Register listener if this is the host of the GameServer
+        final LobbyActivity self = this;
+        if (this.gameController.isHost()) {
+            this.startButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // broadcast a StartGameNotification to others
+                    GameController.StartGameNotification notification =
+                            new GameController.StartGameNotification();
+                    self.gameController.sendMsg(notification);
+
+                    // Jump to GameSequenceActivity
+                    self.startGame();
+                }
+            });
+        } else {
+            // Disable the button if this is client of the GameServer
+            this.startButton.setEnabled(false);
+        }
     }
 
     @Override
@@ -150,7 +164,16 @@ public class LobbyActivity extends PortraitOnlyActivity {
     }
 
     /**
-     * Helper methods initialize the media player for playing background music
+     * Helper method jumps to GameSequenceActivity
+     */
+    protected void startGame() {
+        // Jump to GameSequenceActivity
+        Intent intent = new Intent(this, GameSequenceActivity.class);
+        this.startActivity(intent);
+    }
+
+    /**
+     * Helper method initialize the media player for playing background music
      */
     protected void initializeBackgroundMusic() {
         if (this.mp == null) {

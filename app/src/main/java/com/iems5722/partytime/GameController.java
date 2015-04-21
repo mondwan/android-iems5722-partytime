@@ -73,6 +73,7 @@ public class GameController {
     public static final int KICKED_NOTIFICATION = 7;
     public static final int SERVER_DOWN_NOTFICATION = 8;
     public static final int UPDATE_SCORES_REPONESE = 9;
+    public static final int START_GAME_NOTIFICATION = 10;
 
     // Define the GameServerHandler
     protected static class GameServerHandler extends Handler {
@@ -146,6 +147,10 @@ public class GameController {
         public int scores;
         public String requestIP;
         public String serverIP;
+    }
+
+    public static class StartGameNotification {
+        // No properties
     }
 
     /**
@@ -404,8 +409,11 @@ public class GameController {
                     scoresResponse
             );
             msg.sendToTarget();
+        } else if (gameData instanceof StartGameNotification) {
+            // Forward message back to activity
+            msg = activityHandler.obtainMessage(START_GAME_NOTIFICATION);
+            msg.sendToTarget();
         }
-
     }
 
     /**

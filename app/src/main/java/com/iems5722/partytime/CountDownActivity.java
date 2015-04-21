@@ -25,7 +25,7 @@ public class CountDownActivity extends PortraitOnlyActivity {
                 if (((int) millisUntilFinished / 1000) == 3) {
                     cdView.setText("GET!!");
                 } else if (((int) millisUntilFinished / 1000) == 2) {
-                    cdView.setText("SeTTTTTTTTT~~~");
+                    cdView.setText("SeTTTTTT~~~");
                 } else if (((int) millisUntilFinished / 1000) == 1) {
                     cdView.setText("Ready to GO??!!");
                 }

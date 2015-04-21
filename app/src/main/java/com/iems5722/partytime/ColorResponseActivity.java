@@ -15,37 +15,43 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     final String TAG = "ColorResponse";
     final int gameTime = 10;
 
-    Button masterButton, redButton, blueButton, greenButton;
-    TextView timeView, scoreView;
+    Button redButton, blueButton, greenButton;
+    TextView textView, timeView, scoreView;
     Boolean isFinish = false;
     int targetColor = Color.RED;
     int score = 0;
     int correctCounter = 0;
     int incorrectCounter = 0;
 
+    final String COLOR_TEXT[] = new String[] {
+      "RED", "GREEN", "BLUE"
+    };
+
     private void genAndSetColor() {
         Random rn = new Random();
-        int color = rn.nextInt(3);
+        int color = rn.nextInt(COLOR_TEXT.length - 1);
+        int randText = rn.nextInt(COLOR_TEXT.length - 1);
         switch (color) {
             case 0:
                 //Red
                 targetColor = Color.RED;
-                masterButton.setBackgroundColor(Color.RED);
+                textView.setTextColor(Color.RED);
                 break;
             case 1:
                 //Green
                 targetColor = Color.GREEN;
-                masterButton.setBackgroundColor(Color.GREEN);
+                textView.setTextColor(Color.GREEN);
                 break;
             case 2:
                 //Blue
                 targetColor = Color.BLUE;
-                masterButton.setBackgroundColor(Color.BLUE);
+                textView.setTextColor(Color.BLUE);
                 break;
             default:
                 //default
                 break;
         }
+        textView.setText(COLOR_TEXT[randText]);
     }
 
     private void buttonChangeBG(final Button button, final Boolean flag) {
@@ -86,7 +92,6 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_response);
 
-        masterButton = (Button) this.findViewById(R.id.masterButton);
         redButton = (Button) this.findViewById(R.id.redButton);
         redButton.setBackgroundColor(Color.LTGRAY);
         greenButton = (Button) this.findViewById(R.id.greenButton);
@@ -94,6 +99,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         blueButton = (Button) this.findViewById(R.id.blueButton);
         blueButton.setBackgroundColor(Color.LTGRAY);
         timeView = (TextView) this.findViewById(R.id.timeView);
+        textView = (TextView) this.findViewById(R.id.textView);
         scoreView = (TextView) this.findViewById(R.id.scoreView);
 
         genAndSetColor();

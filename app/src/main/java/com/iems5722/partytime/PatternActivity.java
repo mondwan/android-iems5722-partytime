@@ -73,13 +73,19 @@ public class PatternActivity extends PortraitOnlyActivity {
 
     int checkCounter = 0;
 
+    private void scoreUpdate(int diff) {
+        score += diff;
+
+        // @TODO do something else
+    }
+
     private Boolean checkInputArrow(String arrow) {
         Boolean ret = false;
         if (targetArray.get(checkCounter).equals(arrow)) {
             checkCounter++;
             if (checkCounter == maxArrowSize) {
                 // success one
-                score++;
+                scoreUpdate(1);
                 scoreView.setText(Integer.toString(score));
 
                 // reinit
@@ -89,7 +95,7 @@ public class PatternActivity extends PortraitOnlyActivity {
             }
             return true;
         } else {
-            score--;
+            scoreUpdate(-1);
             scoreView.setText(Integer.toString(score));
 
             // reinit

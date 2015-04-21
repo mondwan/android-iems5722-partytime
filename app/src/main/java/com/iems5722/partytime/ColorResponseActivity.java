@@ -71,16 +71,22 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         }.start();
     }
 
+    private void scoreUpdate(int diff) {
+        score += diff;
+
+        // @TODO do something else
+    }
+
     private Boolean checkColorCorrect(int color) {
         Boolean ret = false;
         if (targetColor == color) {
             correctCounter++;
             genAndSetColor();
-            score++;
+            scoreUpdate(1);
             ret = true;
         } else {
             incorrectCounter++;
-            score--;
+            scoreUpdate(-1);
             ret = false;
         }
         scoreView.setText("Score: " + Integer.toString(score));

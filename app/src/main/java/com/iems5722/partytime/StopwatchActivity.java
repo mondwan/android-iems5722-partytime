@@ -46,6 +46,11 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         return currentTime;
     }
 
+    private void scoreUpdate(int diff) {
+        score += diff;
+
+        // @TODO do something else
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,7 @@ public class StopwatchActivity extends PortraitOnlyActivity {
                 else {
                     score = (int) ((score * 100) / timeRatio);
                 }
-
+                scoreUpdate(score);
                 scoreView.setText("Score Board: " + score);
 
                 Intent output = new Intent();

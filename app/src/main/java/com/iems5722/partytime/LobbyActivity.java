@@ -29,15 +29,15 @@ public class LobbyActivity extends PortraitOnlyActivity {
     protected GameController gameController = null;
 
     protected static class GameControllerHandler extends Handler {
-        protected final WeakReference<LobbyActivity> lobbyActivtiy;
+        protected final WeakReference<LobbyActivity> lobbyActivity;
 
         public GameControllerHandler(LobbyActivity lobbyActivity) {
-            this.lobbyActivtiy = new WeakReference<>(lobbyActivity);
+            this.lobbyActivity = new WeakReference<>(lobbyActivity);
         }
 
         @Override
         public void handleMessage(Message inputMessage) {
-            final LobbyActivity self = this.lobbyActivtiy.get();
+            final LobbyActivity self = this.lobbyActivity.get();
             switch (inputMessage.what) {
                 case GameController.UPDATE_PLAYER_LIST_NOTIFICATION:
                     self.playerListAdapter.notifyDataSetChanged();

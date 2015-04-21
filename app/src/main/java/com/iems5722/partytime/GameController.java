@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -72,6 +73,41 @@ public class GameController {
     public static final int KICKED_NOTIFICATION = 7;
     public static final int SERVER_DOWN_NOTFICATION = 8;
 
+    // Define the GameServerHandler
+    protected static class GameServerHandler extends Handler {
+        protected final WeakReference<GameController> gameController;
+
+        public GameServerHandler(GameController gameController) {
+            this.gameController = new WeakReference<>(gameController);
+        }
+        /**
+         * A handler for GameServer to forward message to us
+         *
+         * @param inputMessage Message
+         */
+        @Override
+        public void handleMessage(Message inputMessage) {
+            // Setup a reference for this handler to access our activity
+            final GameController self = this.gameController.get();
+
+            // Setup a reference for the message payload
+            final Object obj = inputMessage.obj;
+
+            // Determine type of the input message
+            switch (inputMessage.what) {
+                case GameServer.ON_CLIENT_DISCONNECTED:
+                    self.onHandleClientDisconnected(obj);
+                    break;
+                case GameServer.ON_SERVER_DISCONNECTED:
+                    self.onHandleServerDisconnect();
+                    break;
+                case GameServer.ON_RECEIVED_MSG:
+                    self.onHandleMessage(obj);
+                    break;
+            }
+        }
+    }
+
     // Define classes which will be transmitted back and forth in Kryonet network
     public static class JoinHostRequest {
         public String requestIP;
@@ -111,7 +147,7 @@ public class GameController {
         this.playerList = new ArrayList<>();
 
         // Define myHandler
-        this.myHandler = this.createGameServerHandler();
+        this.myHandler = new GameServerHandler(this);
 
         // Instantiate a gameServer instance
         this.gs = GameServer.getInstance();
@@ -301,42 +337,6 @@ public class GameController {
         } else if (gameData instanceof KickedNotification) {
             activityHandler.obtainMessage(KICKED_NOTIFICATION, gameData);
         }
-    }
-
-    /**
-     * Helper method for instantiating a Handler for listening events from GameServer
-     *
-     * @return Handler
-     */
-    protected Handler createGameServerHandler() {
-        return new Handler() {
-            /**
-             * A handler for GameServer to forward message to us
-             *
-             * @param inputMessage Message
-             */
-            @Override
-            public void handleMessage(Message inputMessage) {
-                // Setup a reference for this handler to access our activity
-                final GameController self = GameController.this;
-
-                // Setup a reference for the message payload
-                final Object obj = inputMessage.obj;
-
-                // Determine type of the input message
-                switch (inputMessage.what) {
-                    case GameServer.ON_CLIENT_DISCONNECTED:
-                        self.onHandleClientDisconnected(obj);
-                        break;
-                    case GameServer.ON_SERVER_DISCONNECTED:
-                        self.onHandleServerDisconnect();
-                        break;
-                    case GameServer.ON_RECEIVED_MSG:
-                        self.onHandleMessage(obj);
-                        break;
-                }
-            }
-        };
     }
 
     /**

@@ -2,6 +2,7 @@ package com.iems5722.partytime;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
 
     final String TAG = "GameSequence";
     final public static String SCORE_CODE = "SCORE_CODE";
+    protected GameController gameController = null;
 
     // 0 for CrazyClick
     // 1 for ColorResponse
@@ -124,8 +126,12 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_sequence);
 
+
         scoreView = (TextView) this.findViewById(R.id.scoreView);
         testButton = (Button) this.findViewById(R.id.testButton);
+
+
+
 
         // init
         initGameQueue();
@@ -150,8 +156,31 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //requestCode == crazyGameRequestCode &&
         if (resultCode == RESULT_OK && data != null) {
-            int score = data.getIntExtra(SCORE_CODE, 100);
-            scoreView.setText("Score Board: " + Integer.toString(score));
+//            int score = data.getIntExtra(SCORE_CODE, 100);
+            this.gameController = GameController.getInstance();
+            final GameController.UpdateScoresRequest req = new GameController.UpdateScoresRequest();
+            final GameController.UpdateScoresResponse res = new GameController.UpdateScoresResponse();
+            GamePlayer player = gameController.getGamePlayer(gameController.localIP);
+            if (gameController.isHost()){
+                res.scores = player.getScores();
+                res.requestIP = gameController.localIP;
+                res.serverIP = gameController.getServerIP();
+                gameController.setGamePlayerScores(res.serverIP,res.scores);
+
+                String username = player.username;
+                int scores = player.scores;
+                Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
+                scoreView.setText(username + " : " + scores);
+            }
+            else{
+                req.requestIP = gameController.localIP;
+                gameController.sendMsg(req);
+                gameController.setGamePlayerScores(req.requestIP,req.scores);
+                Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
+                String username = player.username;
+                int scores = player.scores;
+                scoreView.setText(username + " : " + scores);
+            }
         }
     }
 }

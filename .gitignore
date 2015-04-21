@@ -8,3 +8,5 @@ android-iems5722-partytime.iml
 app/app.iml
 .idea/inspectionProfiles/Project_Default.xml
 .idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/gradle.xml

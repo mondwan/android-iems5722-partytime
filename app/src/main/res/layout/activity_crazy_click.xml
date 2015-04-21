@@ -12,8 +12,8 @@
         android:text="I am Timer"
         android:id="@+id/timeView"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -21,15 +21,16 @@
         android:text="Click Me !!"
         android:id="@+id/crazyButton"
         android:layout_below="@+id/counterView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="I am counter"
         android:id="@+id/counterView"
+        android:textSize="30dp"
         android:layout_below="@+id/timeView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp" />
 </RelativeLayout>

@@ -40,20 +40,20 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
                     score++;
                     counterView.setText(Integer.toString(score));
                     if (gameController.isHost()){
+                        GamePlayer player = gameController.getGamePlayer(gameController.localIP);
                         res.scores = score;
                         res.requestIP = gameController.localIP;
                         res.serverIP = gameController.getServerIP();
                         gameController.sendMsg(res);
                         gameController.setGamePlayerScores(res.serverIP,res.scores);
-                        GamePlayer player = gameController.getGamePlayer(res.serverIP);
                         Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
                     }
                     else{
+                        GamePlayer player = gameController.getGamePlayer(gameController.localIP);
                         req.scores = score;
                         req.requestIP = gameController.localIP;
                         gameController.sendMsg(req);
                         gameController.setGamePlayerScores(req.requestIP,req.scores);
-                        GamePlayer player = gameController.getGamePlayer(req.requestIP);
                         Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
                     }
                 }

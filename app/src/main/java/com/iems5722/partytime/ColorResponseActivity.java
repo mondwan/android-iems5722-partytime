@@ -85,13 +85,11 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
             res.serverIP = gameController.getServerIP();
             gameController.sendMsg(res);
             gameController.setGamePlayerScores(res.serverIP,res.scores);
-
-
             Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
         }
         else{
             GamePlayer player = gameController.getGamePlayer(gameController.localIP);
-            res.scores = player.getScores() + diff;
+            req.scores = player.getScores() + diff;
             req.requestIP = gameController.localIP;
             gameController.sendMsg(req);
             gameController.setGamePlayerScores(req.requestIP,req.scores);

@@ -173,6 +173,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
                 scoreView.setText(username + " : " + scores);
             }
             else{
+                req.scores = player.getScores();
                 req.requestIP = gameController.localIP;
                 gameController.sendMsg(req);
                 gameController.setGamePlayerScores(req.requestIP,req.scores);

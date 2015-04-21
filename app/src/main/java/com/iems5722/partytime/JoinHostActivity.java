@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +34,42 @@ public class JoinHostActivity extends PortraitOnlyActivity {
     protected class InvalidIPV4Exception extends Exception {
     }
 
-    protected class FailToConnectToGameServerException extends Exception {
+    protected static class GameControllerHandler extends Handler {
+        protected final WeakReference<JoinHostActivity> joinHostActivity;
+
+        public GameControllerHandler(JoinHostActivity joinHostActivity) {
+            this.joinHostActivity = new WeakReference<>(joinHostActivity);
+        }
+
+        /**
+         * Defines the operations to perform when this activity receives a new Message from the
+         * GameController.
+         *
+         * @param inputMessage Message
+         */
+        @Override
+        public void handleMessage(Message inputMessage) {
+            final JoinHostActivity self = this.joinHostActivity.get();
+
+            switch (inputMessage.what) {
+                case GameController.JOIN_HOST_RESPONSE:
+                    GameController.JoinHostResponse
+                            obj = (GameController.JoinHostResponse) inputMessage.obj;
+                    if (!obj.isSuccess) {
+                        self.statusText.setText(R.string.status_connect_failure);
+                        self.hostIPInputBox.setEnabled(true);
+                        self.joinHostButton.setEnabled(true);
+                    } else {
+                        // Go to Lobby activity
+                        Intent intent = new Intent(
+                                self,
+                                LobbyActivity.class
+                        );
+                        self.startActivity(intent);
+                    }
+            }
+
+        }
     }
 
     @Override
@@ -74,38 +110,7 @@ public class JoinHostActivity extends PortraitOnlyActivity {
 
         // Define Handler
         if (this.mHandler == null) {
-            this.mHandler = new Handler() {
-                /**
-                 * Defines the operations to perform when this activity receives a new Message from the
-                 * GameController.
-                 *
-                 * @param inputMessage Message
-                 */
-                @Override
-                public void handleMessage(Message inputMessage) {
-                    try {
-                        switch (inputMessage.what) {
-                            case GameController.JOIN_HOST_RESPONSE:
-                                GameController.JoinHostResponse
-                                        obj = (GameController.JoinHostResponse) inputMessage.obj;
-                                if (!obj.isSuccess) {
-                                    throw new FailToConnectToGameServerException();
-                                } else {
-                                    // Go to Lobby activity
-                                    Intent intent = new Intent(
-                                            JoinHostActivity.this,
-                                            LobbyActivity.class
-                                    );
-                                    startActivity(intent);
-                                }
-                        }
-                    } catch (FailToConnectToGameServerException e) {
-                        self.statusText.setText(R.string.status_connect_failure);
-                        self.hostIPInputBox.setEnabled(true);
-                        self.joinHostButton.setEnabled(true);
-                    }
-                }
-            };
+            this.mHandler = new GameControllerHandler(this);
         }
     }
 

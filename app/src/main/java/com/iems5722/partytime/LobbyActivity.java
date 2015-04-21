@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
@@ -26,6 +27,44 @@ public class LobbyActivity extends PortraitOnlyActivity {
     protected PlayerItemAdapter playerListAdapter = null;
 
     protected GameController gameController = null;
+
+    protected static class GameControllerHandler extends Handler {
+        protected final WeakReference<LobbyActivity> lobbyActivtiy;
+
+        public GameControllerHandler(LobbyActivity lobbyActivity) {
+            this.lobbyActivtiy = new WeakReference<>(lobbyActivity);
+        }
+
+        @Override
+        public void handleMessage(Message inputMessage) {
+            final LobbyActivity self = this.lobbyActivtiy.get();
+            switch (inputMessage.what) {
+                case GameController.UPDATE_PLAYER_LIST_NOTIFICATION:
+                    self.playerListAdapter.notifyDataSetChanged();
+                    break;
+                case GameController.SERVER_DOWN_NOTFICATION:
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(self);
+                    dialog.setTitle("Lobby closed");
+                    dialog.setMessage(
+                            "Lobby has been closed by the host."
+                    );
+                    dialog.setIcon(android.R.drawable.ic_dialog_alert);
+                    dialog.setCancelable(false);
+                    dialog.setPositiveButton(
+                            "OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Back to HomeActivity
+                                    self.finish();
+                                }
+                            }
+                    );
+
+                    dialog.show();
+                    break;
+            }
+        }
+    }
 
     // Handler reference
     protected Handler mHandler = null;
@@ -55,43 +94,7 @@ public class LobbyActivity extends PortraitOnlyActivity {
         // Link up list with our adapter
         this.playerList.setAdapter(this.playerListAdapter);
 
-        this.mHandler = this.mHandler != null ? this.mHandler : new Handler() {
-            /**
-             * Defines the operations to perform when this activity receives a new Message from the
-             * GameController.
-             *
-             * @param inputMessage Message
-             */
-            @Override
-            public void handleMessage(Message inputMessage) {
-                final LobbyActivity self = LobbyActivity.this;
-                switch (inputMessage.what) {
-                    case GameController.UPDATE_PLAYER_LIST_NOTIFICATION:
-                        self.playerListAdapter.notifyDataSetChanged();
-                        break;
-                    case GameController.SERVER_DOWN_NOTFICATION:
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(self);
-                        dialog.setTitle("Lobby closed");
-                        dialog.setMessage(
-                                "Lobby has been closed by the host."
-                        );
-                        dialog.setIcon(android.R.drawable.ic_dialog_alert);
-                        dialog.setCancelable(false);
-                        dialog.setPositiveButton(
-                                "OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // Back to HomeActivity
-                                        self.finish();
-                                    }
-                                }
-                        );
-
-                        dialog.show();
-                        break;
-                }
-            }
-        };
+        this.mHandler = this.mHandler != null ? this.mHandler : new GameControllerHandler(this);
 
         // Register a handler for GameController to feedback event from GameServer
         this.gameController.registerHandler(this.mHandler);

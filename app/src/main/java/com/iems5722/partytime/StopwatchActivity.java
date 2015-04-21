@@ -58,7 +58,7 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         instructionView = (TextView) this.findViewById(R.id.instructionView);
 
         // init
-        instructionView.setText("I would like to be close to: " + initRandtime() / 1000);
+        instructionView.setText("Stopped close to: " + initRandtime() / 1000);
 
 
         String timeShow = "";

@@ -316,6 +316,7 @@ public class GameServer {
         instance.register(GameController.ServerDownNotification.class);
         instance.register(java.util.ArrayList.class);
         instance.register(GamePlayer.class);
-        instance.register(GameController.UpdateScoresNotification.class);
+        instance.register(GameController.UpdateScoresRequest.class);
+        instance.register(GameController.UpdateScoresResponse.class);
     }
 }

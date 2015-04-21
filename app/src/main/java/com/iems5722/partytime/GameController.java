@@ -72,6 +72,7 @@ public class GameController {
     public static final int UPDATE_PLAYER_LIST_NOTIFICATION = 6;
     public static final int KICKED_NOTIFICATION = 7;
     public static final int SERVER_DOWN_NOTFICATION = 8;
+    public static final int UPDATE_SCORES_REPONESE = 9;
 
     // Define the GameServerHandler
     protected static class GameServerHandler extends Handler {
@@ -135,10 +136,13 @@ public class GameController {
         //TODO work out properties here
     }
 
-    public static class UpdateScoresNotification{
+    public static class UpdateScoresRequest {
         public int scores;
     }
 
+    public static class UpdateScoresResponse{
+        public int scores;
+    }
     /**
      * Singleton implementation
      */
@@ -245,6 +249,8 @@ public class GameController {
         // A notification reference for later work
         final UpdatePlayerListNotification notification = new UpdatePlayerListNotification();
 
+        final UpdateScoresRequest scoresreq = new UpdateScoresRequest();
+        final UpdateScoresResponse scoresres = new UpdateScoresResponse();
         // A message reference for later work
         Message msg;
 
@@ -336,7 +342,29 @@ public class GameController {
             msg.sendToTarget();
         } else if (gameData instanceof KickedNotification) {
             activityHandler.obtainMessage(KICKED_NOTIFICATION, gameData);
+        } else if (gameData instanceof UpdateScoresRequest){
+            scoresreq.scores = ((UpdateScoresRequest) gameData).scores;
+            Log.d(TAG, "UpdateScores Client request received");
+            scoresres.scores = ((UpdateScoresRequest) gameData).scores;
+            this.networkCallsThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    self.gs.broadcastMessage(scoresres);
+                }
+            });
+            Log.d(TAG, "UpdateScores Client Response broadcast");
+            msg = activityHandler.obtainMessage(
+                    UPDATE_SCORES_REPONESE,
+                    scoresres
+            );
+            msg.sendToTarget();
+
+        }else if (gameData instanceof UpdateScoresResponse){
+            scoresreq.scores = ((UpdateScoresResponse) gameData).scores;
+            Log.d(TAG, "UpdateScores Server response received");
+
         }
+
     }
 
     /**
@@ -438,20 +466,25 @@ public class GameController {
         }
     }
 
-    public void sendMsg(int scores){
-        UpdateScoresNotification updateScores = new UpdateScoresNotification();
-        updateScores.scores = scores;
-        if (this.isHost()){
+    public void sendMsg(final Object gameData){
+        final GameController self = GameController.this;
+        if (this.isHost()) {
             //server
-            Log.d(TAG, String.format("Sever(sendMsg): " + scores));
-
-            this.gs.broadcastMessage(updateScores);
+            this.networkCallsThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    self.gs.broadcastMessage(gameData);
+                }
+            });
         }
-        else{
+        else {
             //client
-            Log.d(TAG, String.format("Client(sendMsg): " + scores));
-
-            this.gs.sendMessageToServer(updateScores);
+            this.networkCallsThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    self.gs.sendMessageToServer(gameData);
+                }
+            });
         }
     }
 

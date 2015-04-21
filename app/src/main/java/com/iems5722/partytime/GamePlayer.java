@@ -7,6 +7,15 @@ public class GamePlayer {
     protected String username;
     protected String ip;
     protected int position;
+    protected int scores;
+
+    public int getScores() {
+        return scores;
+    }
+
+    public void setScores(int scores) {
+        this.scores = scores;
+    }
 
     public int getPosition() {
         return position;
@@ -41,5 +50,6 @@ public class GamePlayer {
         this.ip = ip;
         this.username = username;
         this.position = pos;
+        this.scores = 0;
     }
 }

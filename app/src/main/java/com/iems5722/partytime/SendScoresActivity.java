@@ -31,10 +31,16 @@ public class SendScoresActivity extends PortraitOnlyActivity {
 
                 if (gameController.isHost()){
                     res.scores = myInteger;
+                    res.requestIP = gameController.localIP;
+                    res.serverIP = gameController.getServerIP();
                     gameController.sendMsg(res);
+                    gameController.setGamePlayerScores(res.serverIP,res.scores);
+                    GamePlayer player = gameController.getGamePlayer(res.serverIP);
+                    Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(),player.getScores()));
                 }
                 else{
                     req.scores = myInteger;
+                    req.requestIP = gameController.localIP;
                     gameController.sendMsg(req);
                 }
 

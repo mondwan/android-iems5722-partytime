@@ -138,10 +138,13 @@ public class GameController {
 
     public static class UpdateScoresRequest {
         public int scores;
+        public String requestIP;
     }
 
     public static class UpdateScoresResponse{
         public int scores;
+        public String requestIP;
+        public String serverIP;
     }
     /**
      * Singleton implementation
@@ -344,8 +347,13 @@ public class GameController {
             activityHandler.obtainMessage(KICKED_NOTIFICATION, gameData);
         } else if (gameData instanceof UpdateScoresRequest){
             scoresreq.scores = ((UpdateScoresRequest) gameData).scores;
-            Log.d(TAG, "UpdateScores Client request received");
-            scoresres.scores = ((UpdateScoresRequest) gameData).scores;
+            scoresreq.requestIP = ((UpdateScoresRequest) gameData).requestIP;
+            Log.d(TAG, String.format("UpdateScores Client request received from |%s|", scoresreq.requestIP));
+            GamePlayer player = this.getGamePlayer(scoresreq.requestIP);
+            player.scores = scoresreq.scores;
+            Log.d(TAG, String.format("Scores Update(Server): Player |%s|, Scores|%s|", player.getUsername(),player.getScores()));
+            scoresres.scores = scoresreq.scores;
+            scoresres.requestIP = scoresreq.requestIP;
             this.networkCallsThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -360,8 +368,17 @@ public class GameController {
             msg.sendToTarget();
 
         }else if (gameData instanceof UpdateScoresResponse){
-            scoresreq.scores = ((UpdateScoresResponse) gameData).scores;
-            Log.d(TAG, "UpdateScores Server response received");
+            scoresres.scores = ((UpdateScoresResponse) gameData).scores;
+            scoresres.requestIP = ((UpdateScoresResponse) gameData).requestIP;
+            Log.d(TAG, String.format("UpdateScores Client request received from |%s|", scoresres.requestIP));
+            GamePlayer player = this.getGamePlayer(scoresres.requestIP);
+            player.scores = scoresres.scores;
+            Log.d(TAG, String.format("Scores Update(Client): Player |%s|, Scores|%s|", player.getUsername(),player.getScores()));
+            msg = activityHandler.obtainMessage(
+                    UPDATE_SCORES_REPONESE,
+                    scoresres
+            );
+            msg.sendToTarget();
 
         }
 
@@ -593,6 +610,36 @@ public class GameController {
         }
 
         return ret;
+    }
+    /**
+     * API fetches player instance by giving a ipv4
+     *
+     * @param ipv4
+     * @return GamePlayer
+     */
+
+    public GamePlayer getGamePlayer(String ipv4){
+        GamePlayer mplayer = null;
+        for (GamePlayer player : this.playerList) {
+            if (player.getIp().equals(ipv4)){
+                mplayer = player;
+            }
+        }
+        return mplayer;
+    }
+    /**
+     * API update player scores by giving a ipv4
+     *
+     * @param ipv4
+     * @param scores
+     * @return void
+     */
+    public void setGamePlayerScores(String ipv4, int scores) {
+        for (GamePlayer player : this.playerList) {
+            if (player.getIp().equals(ipv4)){
+                player.scores = scores;
+            }
+        }
     }
 
     /**

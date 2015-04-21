@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Blue"
         android:id="@+id/blueButton"
-        android:layout_marginBottom="77dp"
+        android:layout_marginBottom="75dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -30,28 +30,27 @@
         android:text="Red"
         android:id="@+id/redButton"
         android:layout_alignTop="@+id/greenButton"
-        android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="The time now is?"
         android:id="@+id/timeView"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="63dp"
+        android:focusable="false"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:focusable="false" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score Board"
         android:id="@+id/scoreView"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="49dp"
         android:layout_below="@+id/timeView"
-        android:layout_alignLeft="@+id/greenButton"
-        android:layout_alignStart="@+id/greenButton" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -59,10 +58,9 @@
         android:text="WHAT IS MY COLOR?"
         android:id="@+id/textView"
         android:textSize="18dp"
+        android:layout_marginTop="33dp"
         android:layout_below="@+id/scoreView"
-        android:layout_toLeftOf="@+id/blueButton"
-        android:layout_toStartOf="@+id/blueButton"
-        android:layout_marginTop="50dp" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -16,7 +16,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     final int gameTime = 10;
 
     Button redButton, blueButton, greenButton;
-    TextView textView, timeView, scoreView;
+    TextView displayView, timeView, scoreView;
     Boolean isFinish = false;
     int targetColor = Color.RED;
     int score = 0;
@@ -29,29 +29,29 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
 
     private void genAndSetColor() {
         Random rn = new Random();
-        int color = rn.nextInt(COLOR_TEXT.length - 1);
-        int randText = rn.nextInt(COLOR_TEXT.length - 1);
+        int color = rn.nextInt(COLOR_TEXT.length);
+        int randText = rn.nextInt(COLOR_TEXT.length);
         switch (color) {
             case 0:
                 //Red
                 targetColor = Color.RED;
-                textView.setTextColor(Color.RED);
+                displayView.setTextColor(Color.RED);
                 break;
             case 1:
                 //Green
                 targetColor = Color.GREEN;
-                textView.setTextColor(Color.GREEN);
+                displayView.setTextColor(Color.GREEN);
                 break;
             case 2:
                 //Blue
                 targetColor = Color.BLUE;
-                textView.setTextColor(Color.BLUE);
+                displayView.setTextColor(Color.BLUE);
                 break;
             default:
                 //default
                 break;
         }
-        textView.setText(COLOR_TEXT[randText]);
+        displayView.setText(COLOR_TEXT[randText]);
     }
 
     private void buttonChangeBG(final Button button, final Boolean flag) {
@@ -99,7 +99,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         blueButton = (Button) this.findViewById(R.id.blueButton);
         blueButton.setBackgroundColor(Color.LTGRAY);
         timeView = (TextView) this.findViewById(R.id.timeView);
-        textView = (TextView) this.findViewById(R.id.textView);
+        displayView = (TextView) this.findViewById(R.id.displayView);
         scoreView = (TextView) this.findViewById(R.id.scoreView);
 
         genAndSetColor();

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 public class CrazyClickActivity extends PortraitOnlyActivity {
     private static final String TAG = CrazyClickActivity.class.getClass().getSimpleName();
+    protected GameController gameController = null;
     final int gameTime = 10;
 
     Button crazyButton;
@@ -19,7 +20,6 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
 
     Boolean isFinish = false;
     int score = 0;
-    protected GameController gameController = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

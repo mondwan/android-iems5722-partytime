@@ -3,6 +3,7 @@ package com.iems5722.partytime;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,8 @@ import java.util.Random;
 
 
 public class StopwatchActivity extends PortraitOnlyActivity {
+    final String TAG = "Stopwatch";
+    protected GameController gameController = null;
 
     TextView timeView, scoreView, instructionView;
     Button stopButton;
@@ -48,8 +51,26 @@ public class StopwatchActivity extends PortraitOnlyActivity {
 
     private void scoreUpdate(int diff) {
         score += diff;
-
-        // @TODO do something else
+        this.gameController = GameController.getInstance();
+        final GameController.UpdateScoresRequest req = new GameController.UpdateScoresRequest();
+        final GameController.UpdateScoresResponse res = new GameController.UpdateScoresResponse();
+        if (gameController.isHost()){
+            res.scores = score;
+            res.requestIP = gameController.localIP;
+            res.serverIP = gameController.getServerIP();
+            gameController.sendMsg(res);
+            gameController.setGamePlayerScores(res.serverIP,res.scores);
+            GamePlayer player = gameController.getGamePlayer(res.serverIP);
+            Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
+        }
+        else{
+            req.scores = score;
+            req.requestIP = gameController.localIP;
+            gameController.sendMsg(req);
+            gameController.setGamePlayerScores(req.requestIP,req.scores);
+            GamePlayer player = gameController.getGamePlayer(req.requestIP);
+            Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import java.util.Random;
 public class PatternActivity extends PortraitOnlyActivity {
 
     final String TAG = "Pattern Activity";
+    protected GameController gameController = null;
     final int gameTime = 10;
 
     TextView scoreView, timeView, instructionView;
@@ -74,9 +76,28 @@ public class PatternActivity extends PortraitOnlyActivity {
     int checkCounter = 0;
 
     private void scoreUpdate(int diff) {
-        score += diff;
 
-        // @TODO do something else
+        score += diff;
+        this.gameController = GameController.getInstance();
+        final GameController.UpdateScoresRequest req = new GameController.UpdateScoresRequest();
+        final GameController.UpdateScoresResponse res = new GameController.UpdateScoresResponse();
+        if (gameController.isHost()){
+            res.scores = score;
+            res.requestIP = gameController.localIP;
+            res.serverIP = gameController.getServerIP();
+            gameController.sendMsg(res);
+            gameController.setGamePlayerScores(res.serverIP,res.scores);
+            GamePlayer player = gameController.getGamePlayer(res.serverIP);
+            Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
+        }
+        else{
+            req.scores = score;
+            req.requestIP = gameController.localIP;
+            gameController.sendMsg(req);
+            gameController.setGamePlayerScores(req.requestIP,req.scores);
+            GamePlayer player = gameController.getGamePlayer(req.requestIP);
+            Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
+        }
     }
 
     private Boolean checkInputArrow(String arrow) {

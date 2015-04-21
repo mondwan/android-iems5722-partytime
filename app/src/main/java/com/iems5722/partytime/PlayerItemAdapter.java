@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,12 @@ public class PlayerItemAdapter extends ArrayAdapter<GamePlayer> {
 
         // Highlight local player row
         if (localPlayerPosition == pos) {
-            convertView.setBackgroundColor(Color.CYAN);
+            Resources color = convertView.getResources();
+            convertView.setBackgroundColor(
+                    color.getColor(
+                            R.color.LocalPlayerHighlight
+                    )
+            );
         } else {
             convertView.setBackgroundColor(Color.TRANSPARENT);
         }

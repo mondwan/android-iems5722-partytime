@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class ColorResponseActivity extends PortraitOnlyActivity {
     final String TAG = "ColorResponse";
-    final int gameTime = 10;
+    final int gameTime = 20;
 
     Button redButton, blueButton, greenButton;
     TextView displayView, timeView, scoreView;

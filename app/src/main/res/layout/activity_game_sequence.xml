@@ -9,8 +9,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game Testing"
-        android:id="@+id/testButton"
+        android:text=""
+        android:id="@+id/nextGameButton"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:text="Test Score View"
         android:id="@+id/scoreView"
         android:layout_marginTop="62dp"
-        android:layout_below="@+id/testButton"
+        android:layout_below="@+id/nextGameButton"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

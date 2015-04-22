@@ -319,5 +319,6 @@ public class GameServer {
         instance.register(GameController.UpdateScoresRequest.class);
         instance.register(GameController.UpdateScoresResponse.class);
         instance.register(GameController.StartGameNotification.class);
+        instance.register(GameController.NextGameNotification.class);
     }
 }

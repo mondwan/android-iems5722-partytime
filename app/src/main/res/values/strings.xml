@@ -32,8 +32,12 @@
     <string name="title_activity_color_response">ColorResponseActivity</string>
     <string name="title_activity_pattern">PatternActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <!--ColorResponseActivity-->
     <string name="title_activity_game_sequence">GameSequenceActivity</string>
+    <string name="next_game">Next Game!</string>
+    <string name="wait_for_host">Waiting for host</string>
+    <string name="end_game">The end of the game</string>
+
     <string name="title_activity_count_down">CountDownActivity</string>
 
     <string name="SendScoresActivity_name">SendScoresActivity</string>

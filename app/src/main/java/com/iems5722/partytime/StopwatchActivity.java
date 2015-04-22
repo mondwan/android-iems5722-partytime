@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -21,6 +22,8 @@ public class StopwatchActivity extends PortraitOnlyActivity {
     TextView timeView, scoreView, instructionView;
     Button stopButton;
 
+    TextView p1ScoreView, p2ScoreView
+            , p3ScoreView, p4ScoreView;
 
     final int BUFFER_TIME = 5000;
     int targetTime = 5000; // in millis second
@@ -54,6 +57,18 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         score = scoresUtils.scoresUpdate(diff);
     }
 
+    private void setScoreTable() {
+        ArrayList<String> scoreList = scoresUtils.getSortedScoreText();
+        // p1
+        try {
+            p1ScoreView.setText(scoreList.get(0));
+            p2ScoreView.setText(scoreList.get(1));
+            p3ScoreView.setText(scoreList.get(2));
+            p4ScoreView.setText(scoreList.get(3));
+        } catch (Exception e) {
+            // something overflow
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +78,13 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         scoreView = (TextView) this.findViewById(R.id.scoreView);
         stopButton = (Button) this.findViewById(R.id.stopButton);
         instructionView = (TextView) this.findViewById(R.id.instructionView);
-
+        p1ScoreView = (TextView) this.findViewById(R.id.p1ScoreView);
+        p2ScoreView = (TextView) this.findViewById(R.id.p2ScoreView);
+        p3ScoreView = (TextView) this.findViewById(R.id.p3ScoreView);
+        p4ScoreView = (TextView) this.findViewById(R.id.p4ScoreView);
         // init
         instructionView.setText("Stopped close to: " + initRandtime() / 1000);
-
+        setScoreTable();
 
         String timeShow = "";
         final CountDownTimer cdtimer = new CountDownTimer(targetTime + BUFFER_TIME, 10) {
@@ -140,4 +158,5 @@ public class StopwatchActivity extends PortraitOnlyActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

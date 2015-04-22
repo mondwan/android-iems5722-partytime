@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class CrazyClickActivity extends PortraitOnlyActivity {
     private static final String TAG = CrazyClickActivity.class.getClass().getSimpleName();
-    protected GameController gameController = null;
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
     final int gameTime = 10;
 
     Button crazyButton;
@@ -22,7 +22,8 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
     int score = 0;
 
     private void scoreUpdate(int diff) {
-        score += diff;
+        score = scoresUtils.ScoresUpdate(diff);
+
     }
 
     @Override
@@ -35,32 +36,12 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
         timeView = (TextView) this.findViewById(R.id.timeView);
         crazyButton = (Button) this.findViewById(R.id.crazyButton);
 
-        this.gameController = GameController.getInstance();
-        final GameController.UpdateScoresRequest req = new GameController.UpdateScoresRequest();
-        final GameController.UpdateScoresResponse res = new GameController.UpdateScoresResponse();
         crazyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isFinish) {
                     scoreUpdate(1);
                     counterView.setText(Integer.toString(score));
-                    if (gameController.isHost()){
-                        GamePlayer player = gameController.getGamePlayer(gameController.localIP);
-                        res.scores = score;
-                        res.requestIP = gameController.localIP;
-                        res.serverIP = gameController.getServerIP();
-                        gameController.sendMsg(res);
-                        gameController.setGamePlayerScores(res.serverIP,res.scores);
-                        Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
-                    }
-                    else{
-                        GamePlayer player = gameController.getGamePlayer(gameController.localIP);
-                        req.scores = score;
-                        req.requestIP = gameController.localIP;
-                        gameController.sendMsg(req);
-                        gameController.setGamePlayerScores(req.requestIP,req.scores);
-                        Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
-                    }
                 }
             }
         });

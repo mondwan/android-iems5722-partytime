@@ -166,6 +166,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
             this.gameController.stopGameServer();
 
             // Kill myself if there are no more game available
+            gameIndex = 0;  // reinit
             this.finish();
         }
     }

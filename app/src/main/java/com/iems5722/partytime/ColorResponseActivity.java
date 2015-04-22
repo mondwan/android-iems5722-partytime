@@ -16,7 +16,6 @@ import java.util.Random;
 public class ColorResponseActivity extends PortraitOnlyActivity {
     private static final String TAG = ColorResponseActivity.class.getClass().getSimpleName();
     ScoresUtils scoresUtils = new ScoresUtils(TAG);
-    final int gameTime = 20;
 
     // GUI
     Button redButton, blueButton, greenButton;
@@ -27,6 +26,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     int targetColor = Color.RED;
 
     // Game Var
+    final int gameTime = 15;
     final int scoreRate = 9;
     int score = 0;
     int correctCounter = 0;

@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -95,6 +96,10 @@ public class StopwatchActivity extends PortraitOnlyActivity {
 
                 String timeShow = String.format("%.3f", getRemainTime(millisUntilFinished));
                 setCurrentTime(timeShow);
+
+                int diffToTarget = Math.abs((int) (Float.parseFloat(getCurrentTime())*1000) - targetTime);
+                if (diffToTarget < 1000) timeView.setTextColor(Color.RED);
+
                 timeView.setText("Time: " + timeShow);
             }
 

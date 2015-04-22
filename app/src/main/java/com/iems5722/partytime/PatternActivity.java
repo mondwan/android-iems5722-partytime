@@ -208,6 +208,7 @@ public class PatternActivity extends PortraitOnlyActivity {
             public void onFinish() {
                 timeView.setText("Finish!");
                 isFinish = true;
+                scoreUpdate(0);
                 upButton.setOnClickListener(null);
                 downButton.setOnClickListener(null);
                 leftButton.setOnClickListener(null);

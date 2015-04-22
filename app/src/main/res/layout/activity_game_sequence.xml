@@ -11,6 +11,8 @@
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/nextGameButton"
+        android:layout_marginTop="118dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -18,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Test Score View"
         android:id="@+id/scoreView"
-        android:layout_marginTop="62dp"
+        android:layout_marginTop="42dp"
         android:layout_below="@+id/nextGameButton"
         android:layout_centerHorizontal="true" />
 

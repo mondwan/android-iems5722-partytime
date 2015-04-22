@@ -82,6 +82,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
             public void onFinish() {
                 timeView.setText("Finish!");
                 isFinish = true;
+                scoreUpdate(0);
 
                 Intent output = new Intent();
                 output.putExtra(GameSequenceActivity.SCORE_CODE, score);

@@ -166,6 +166,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
             public void onFinish() {
                 timeView.setText("Finish!");
                 isFinish = true;
+                scoreUpdate(0);
                 redButton.setOnClickListener(null);
                 greenButton.setOnClickListener(null);
                 blueButton.setOnClickListener(null);

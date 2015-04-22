@@ -59,7 +59,7 @@ public class ScoresUtils {
         Collections.sort(gamePlayers, new Comparator<GamePlayer>() {
             @Override
             public int compare(GamePlayer lhs, GamePlayer rhs) {
-                return lhs.getScores() - rhs.getScores();
+                return rhs.getScores() - lhs.getScores();
             }
         });
 

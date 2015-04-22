@@ -1,23 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">PartyTime</string>
-    <!--HomeActivity-->
+    <!-- HomeActivity -->
     <string name="host_button">Host</string>
     <string name="join_button">Join</string>
     <string name="action_settings">Settings</string>
     <string name="stopwatch_button">Stop Watch</string>
 
-    <!--LobbyActivity-->
+    <!-- LobbyActivity -->
     <string name="title_activity_lobby">LobbyActivity</string>
     <string name="host_ip_hint">Host IP Address</string>
     <string name="host_ip">Loading IP Address</string>
     <string name="start_button">START</string>
 
-    <!--StopwatchActivity-->
+    <!-- StopwatchActivity -->
     <string name="title_activity_stopwatch">StopwatchActivity</string>
     <string name="stopwatch_title">Stopwatch</string>
     <string name="game_rule">Game Rule:</string>
 
-    <!--JoinHostActivity-->
+    <!-- JoinHostActivity -->
     <string name="title_activity_join_host">JoinHostActivity</string>
     <string name="host_ip_enter">Enter Host IP here</string>
     <string name="join_host_button">Join!</string>
@@ -25,20 +27,21 @@
     <string name="status_connect_failure">Unable to connect given host. Please try again</string>
     <string name="status_invalid_ipv4">Invalid IPV4. Please try again</string>
 
-    <!--CrazyClickActivity-->
+    <!-- CrazyClickActivity -->
     <string name="title_activity_crazy_click">CrazyClickActivity</string>
 
-    <!--ColorResponseActivity-->
+    <!-- ColorResponseActivity -->
     <string name="title_activity_color_response">ColorResponseActivity</string>
     <string name="title_activity_pattern">PatternActivity</string>
 
-    <!--ColorResponseActivity-->
+    <!-- ColorResponseActivity -->
     <string name="title_activity_game_sequence">GameSequenceActivity</string>
     <string name="next_game">Click to Start Game!</string>
     <string name="wait_for_host">Waiting for host</string>
     <string name="end_game">The end of all games</string>
-
     <string name="title_activity_count_down">CountDownActivity</string>
-
     <string name="SendScoresActivity_name">SendScoresActivity</string>
+    <string name="title_activity_finish_cd">FinishCDActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

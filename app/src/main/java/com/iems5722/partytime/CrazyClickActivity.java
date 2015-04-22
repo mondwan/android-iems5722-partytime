@@ -23,7 +23,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
 
     // Game Var
     final int gameTime = 5;
-    final int scoreRate = 4;
+    final int scoreRate = 1;
 
     // Game Flow
     Boolean isFinish = false;

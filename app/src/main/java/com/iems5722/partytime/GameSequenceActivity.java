@@ -129,6 +129,11 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         startActivity(intent);
     }
 
+    private void finishCD() {
+        Intent intent = new Intent(GameSequenceActivity.this, FinishCDActivity.class);
+        startActivity(intent);
+    }
+
     private void setScoreTable() {
         ArrayList<String> scoreList = scoresUtils.getSortedScoreText();
         // p1
@@ -151,6 +156,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
 
         if (index != -1) {
             // Jump to next Game
+            this.finishCD();
             this.startChosenGame(index);
             this.startCD();
         } else {

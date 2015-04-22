@@ -4,6 +4,9 @@ import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by chan on 4/22/2015.
@@ -46,6 +49,25 @@ public class ScoresUtils {
     public ArrayList<GamePlayer> getPlayerList(){
         gameController = GameController.getInstance();
         return gameController.getPlayerList();
+    }
+
+    public ArrayList<String> getSortedScoreText() {
+        ArrayList<String> scoreList = new ArrayList<String>();
+        ArrayList<GamePlayer> gamePlayers = getPlayerList();
+
+        // Sort the gamePlayer list with the score
+        Collections.sort(gamePlayers, new Comparator<GamePlayer>() {
+            @Override
+            public int compare(GamePlayer lhs, GamePlayer rhs) {
+                return lhs.getScores() - rhs.getScores();
+            }
+        });
+
+        for (int i = 0; i < gamePlayers.size(); i++) {
+            scoreList.add(gamePlayers.get(i).getUsername()
+                + ": " + gamePlayers.get(i).getScores());
+        }
+        return scoreList;
     }
 
     public int getMyScores(){

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -24,6 +25,10 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     int score = 0;
     int correctCounter = 0;
     int incorrectCounter = 0;
+
+    // TOCOPY
+    TextView p1ScoreView, p2ScoreView
+            , p3ScoreView, p4ScoreView;
 
     final String COLOR_TEXT[] = new String[] {
       "RED", "GREEN", "BLUE"
@@ -93,6 +98,15 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         return ret;
     }
 
+    private void setScoreTable() {
+        ArrayList<String> scoreList = scoresUtils.getSortedScoreText();
+        // p1
+        p1ScoreView.setText(scoreList.get(0));
+        p2ScoreView.setText(scoreList.get(1));
+        p3ScoreView.setText(scoreList.get(2));
+        p4ScoreView.setText(scoreList.get(3));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +121,12 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         timeView = (TextView) this.findViewById(R.id.timeView);
         displayView = (TextView) this.findViewById(R.id.displayView);
         scoreView = (TextView) this.findViewById(R.id.scoreView);
+
+        // TOCOPY
+        p1ScoreView = (TextView) this.findViewById(R.id.p1ScoreView);
+        p2ScoreView = (TextView) this.findViewById(R.id.p2ScoreView);
+        p3ScoreView = (TextView) this.findViewById(R.id.p3ScoreView);
+        p4ScoreView = (TextView) this.findViewById(R.id.p4ScoreView);
 
         genAndSetColor();
         redButton.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +156,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
 
             public void onTick(long millisUntilFinished) {
                 timeView.setText("Time remaining: " + millisUntilFinished / 1000);
+                setScoreTable();
             }
 
             public void onFinish() {

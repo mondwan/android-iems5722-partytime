@@ -20,6 +20,11 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
 
     Boolean isFinish = false;
     int score = 0;
+
+    private void scoreUpdate(int diff) {
+        score += diff;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +42,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
             @Override
             public void onClick(View v) {
                 if (!isFinish) {
-                    score++;
+                    scoreUpdate(1);
                     counterView.setText(Integer.toString(score));
                     if (gameController.isHost()){
                         GamePlayer player = gameController.getGamePlayer(gameController.localIP);

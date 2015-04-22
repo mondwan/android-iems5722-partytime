@@ -37,6 +37,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="48dp" />
 
+
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -110,5 +111,29 @@
         android:layout_below="@+id/p3ScoreView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/up"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/up"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/down"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/down"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/left"
+        android:layout_centerHorizontal="true"
+        android:background="@mipmap/left"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/right"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

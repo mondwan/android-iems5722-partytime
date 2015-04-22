@@ -180,10 +180,10 @@ public class GameController {
 
         // Hard code list of image resource
         this.playerIconResource = new ArrayList<>();
-        this.playerIconResource.add(R.mipmap.p4_icon);
+        this.playerIconResource.add(R.mipmap.p1_icon);
         this.playerIconResource.add(R.mipmap.p2_icon);
         this.playerIconResource.add(R.mipmap.p3_icon);
-        this.playerIconResource.add(R.mipmap.p1_icon);
+        this.playerIconResource.add(R.mipmap.p4_icon);
 
         // Instantiate thread pool for network calls
         // Define timeunit to be seconds

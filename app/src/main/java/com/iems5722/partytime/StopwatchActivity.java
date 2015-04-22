@@ -85,7 +85,7 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         p3ScoreView = (TextView) this.findViewById(R.id.p3ScoreView);
         p4ScoreView = (TextView) this.findViewById(R.id.p4ScoreView);
         // init
-        instructionView.setText("Stopped close to: " + initRandtime() / 1000);
+        instructionView.setText("Try your best to stop close to: " + initRandtime() / 1000);
         setScoreTable();
 
         String timeShow = "";

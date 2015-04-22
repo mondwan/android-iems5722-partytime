@@ -41,7 +41,8 @@
         android:id="@+id/instructionView"
         android:layout_alignBottom="@+id/timeView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="48dp" />
+        android:layout_marginBottom="48dp"
+        android:textColor="@android:color/holo_red_dark" />
 
     <TextView
         android:layout_width="wrap_content"

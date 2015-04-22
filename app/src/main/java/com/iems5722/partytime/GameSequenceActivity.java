@@ -299,7 +299,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
                 String username = player.username;
                 int scores = player.scores;
                 Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
-                scoreView.setText(username + " : " + scores);
+                scoreView.setText("Player: " + username);
             }
             else{
                 req.scores = player.getScores();
@@ -309,7 +309,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
                 Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
                 String username = player.username;
                 int scores = player.scores;
-                scoreView.setText(username + " : " + scores);
+                scoreView.setText("Player: " + username);
             }
 
             setScoreTable();

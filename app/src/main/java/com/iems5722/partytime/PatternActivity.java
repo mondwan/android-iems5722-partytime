@@ -17,7 +17,8 @@ public class PatternActivity extends PortraitOnlyActivity {
 
     private static final String TAG = PatternActivity.class.getClass().getSimpleName();
     ScoresUtils scoresUtils = new ScoresUtils(TAG);
-
+    TextView p1ScoreView, p2ScoreView
+            , p3ScoreView, p4ScoreView;
     final int gameTime = 10;
 
     TextView scoreView, timeView, instructionView;
@@ -123,7 +124,18 @@ public class PatternActivity extends PortraitOnlyActivity {
             }
         }.start();
     }
+    private void setScoreTable() {
+        ArrayList<String> scoreList = scoresUtils.getSortedScoreText();
 
+        try {
+            p1ScoreView.setText(scoreList.get(0));
+            p2ScoreView.setText(scoreList.get(1));
+            p3ScoreView.setText(scoreList.get(2));
+            p4ScoreView.setText(scoreList.get(3));
+        } catch (Exception e) {
+            // something overflow
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +154,10 @@ public class PatternActivity extends PortraitOnlyActivity {
         rightButton = (Button) this.findViewById(R.id.rightButton);
         rightButton.setBackgroundColor(Color.LTGRAY);
 
+        p1ScoreView = (TextView) this.findViewById(R.id.p1ScoreView);
+        p2ScoreView = (TextView) this.findViewById(R.id.p2ScoreView);
+        p3ScoreView = (TextView) this.findViewById(R.id.p3ScoreView);
+        p4ScoreView = (TextView) this.findViewById(R.id.p4ScoreView);
         // init Screen
         genAndSetArrow();
         showArrow();
@@ -186,6 +202,7 @@ public class PatternActivity extends PortraitOnlyActivity {
 
             public void onTick(long millisUntilFinished) {
                 timeView.setText("Time remaining: " + millisUntilFinished / 1000);
+                setScoreTable();
             }
 
             public void onFinish() {

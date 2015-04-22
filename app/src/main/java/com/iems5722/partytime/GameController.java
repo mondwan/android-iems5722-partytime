@@ -176,14 +176,14 @@ public class GameController {
         this.listOfUsername.add("勇者仁傑");
         this.listOfUsername.add("法師歌莉");
         this.listOfUsername.add("舞者結他他");
-        this.listOfUsername.add("八神太一");
+        this.listOfUsername.add("杰寶倫");
 
         // Hard code list of image resource
         this.playerIconResource = new ArrayList<>();
-        this.playerIconResource.add(R.mipmap.p1_icon);
+        this.playerIconResource.add(R.mipmap.p4_icon);
         this.playerIconResource.add(R.mipmap.p2_icon);
         this.playerIconResource.add(R.mipmap.p3_icon);
-        this.playerIconResource.add(R.mipmap.p4_icon);
+        this.playerIconResource.add(R.mipmap.p1_icon);
 
         // Instantiate thread pool for network calls
         // Define timeunit to be seconds

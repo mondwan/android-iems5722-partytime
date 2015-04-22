@@ -22,6 +22,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
 
     protected GameController gameController = null;
     protected GameControllerHandler mHandler = null;
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
     // 0 for CrazyClick
     // 1 for ColorResponse
@@ -41,6 +42,9 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     // GUI
     Button nextGameButton;
     TextView scoreView;
+
+    TextView p1ScoreView, p2ScoreView
+            , p3ScoreView, p4ScoreView;
 
     /**
      * Handler for receiving events from GameController
@@ -123,6 +127,19 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     private void startCD() {
         Intent intent = new Intent(GameSequenceActivity.this, CountDownActivity.class);
         startActivity(intent);
+    }
+
+    private void setScoreTable() {
+        ArrayList<String> scoreList = scoresUtils.getSortedScoreText();
+        // p1
+        try {
+            p1ScoreView.setText(scoreList.get(0));
+            p2ScoreView.setText(scoreList.get(1));
+            p3ScoreView.setText(scoreList.get(2));
+            p4ScoreView.setText(scoreList.get(3));
+        } catch (Exception e) {
+            // something overflow
+        }
     }
 
     /**
@@ -225,6 +242,12 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         scoreView = (TextView) this.findViewById(R.id.scoreView);
         nextGameButton = (Button) this.findViewById(R.id.nextGameButton);
 
+        // TOCOPY
+        p1ScoreView = (TextView) this.findViewById(R.id.p1ScoreView);
+        p2ScoreView = (TextView) this.findViewById(R.id.p2ScoreView);
+        p3ScoreView = (TextView) this.findViewById(R.id.p3ScoreView);
+        p4ScoreView = (TextView) this.findViewById(R.id.p4ScoreView);
+
         // Get gameController reference
         this.gameController = GameController.getInstance();
 
@@ -288,6 +311,8 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
                 int scores = player.scores;
                 scoreView.setText(username + " : " + scores);
             }
+
+            setScoreTable();
         }
     }
 }

@@ -22,4 +22,33 @@
         android:layout_below="@+id/nextGameButton"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p1ScoreView"
+        android:layout_below="@+id/scoreView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p2ScoreView"
+        android:layout_below="@+id/p1ScoreView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p3ScoreView"
+        android:layout_below="@+id/p2ScoreView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/p4ScoreView"
+        android:layout_below="@+id/p3ScoreView"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

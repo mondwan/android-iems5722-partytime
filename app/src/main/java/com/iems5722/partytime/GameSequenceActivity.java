@@ -155,8 +155,6 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
             this.startCD();
         } else {
             Log.d(TAG, "No more game available");
-            // Change text
-            this.nextGameButton.setText(R.string.end_game);
 
             // Stop the GameServer if it is running
             this.gameController.stopGameServer();
@@ -212,11 +210,11 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         switch (gameIndex - 1) {
             case crazyGameCode:
                 //CrazyClick
-                ret = "Craz yClick Game";
+                ret = "Crazy Click";
                 break;
             case colorResponseCode:
                 //ColorResponse
-                ret = "Color Response Game";
+                ret = "Color Response";
                 break;
             case patternCode:
                 //Pattern
@@ -311,8 +309,13 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
                 int scores = player.scores;
                 scoreView.setText("Player: " + username);
             }
-
             setScoreTable();
+        }
+
+        // Game Flow Control
+        if (gameIndex == maxGameNumber) {
+            // Change text
+            this.nextGameButton.setText(R.string.end_game);
         }
     }
 }

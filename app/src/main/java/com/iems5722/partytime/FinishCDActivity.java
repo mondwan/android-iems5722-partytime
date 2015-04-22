@@ -20,6 +20,8 @@ public class FinishCDActivity extends ActionBarActivity {
             }
 
             public void onFinish() {
+                ScoresUtils scoresUtils = new ScoresUtils("NULL");
+                scoresUtils.scoresUpdate(0);
                 finish();
             }
         }.start();

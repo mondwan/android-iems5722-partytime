@@ -29,6 +29,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Follow to my word !!!"
+        android:id="@+id/textView5"
+        android:layout_marginTop="32dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_below="@+id/scoreView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/instructionView"
         android:singleLine="false"

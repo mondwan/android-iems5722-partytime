@@ -109,7 +109,6 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         } catch (Exception e) {
             // something overflow
         }
-
     }
 
     @Override

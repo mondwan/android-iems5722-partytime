@@ -74,7 +74,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player1"
         android:id="@+id/p1ScoreView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -83,7 +82,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player2"
         android:id="@+id/p2ScoreView"
         android:layout_below="@+id/p1ScoreView"
         android:layout_alignParentLeft="true"
@@ -92,7 +90,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player3"
         android:id="@+id/p3ScoreView"
         android:layout_below="@+id/p2ScoreView"
         android:layout_alignParentLeft="true"
@@ -101,7 +98,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player4"
         android:id="@+id/p4ScoreView"
         android:layout_below="@+id/p3ScoreView"
         android:layout_alignParentLeft="true"

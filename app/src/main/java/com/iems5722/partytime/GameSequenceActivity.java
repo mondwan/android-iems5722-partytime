@@ -30,14 +30,14 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     // 3 for stopwatch
     final int maxGameNumber = 4;
 
-    final int crazyGameCode = 0;
-    final int colorResponseCode = 1;
-    final int patternCode = 2;
-    final int stopwatchCode = 3;
+    final static int crazyGameCode = 0;
+    final static int colorResponseCode = 1;
+    final static int patternCode = 2;
+    final static int stopwatchCode = 3;
 
     // Game flow control
     ArrayList<Integer> gameQueue;
-    int gameIndex = 0;
+    public static int gameIndex = 0;
 
     // GUI
     Button nextGameButton;
@@ -207,28 +207,28 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         }
     }
 
-    private String getButtonText() {
+    public static String getButtonText() {
         String ret = "";
-        switch (gameIndex) {
+        switch (gameIndex - 1) {
             case crazyGameCode:
                 //CrazyClick
-                ret = "CrazyClick";
+                ret = "Craz yClick Game";
                 break;
             case colorResponseCode:
                 //ColorResponse
-                ret = "ColorResponse";
+                ret = "Color Response Game";
                 break;
             case patternCode:
                 //Pattern
-                ret = "Pattern";
+                ret = "Pattern Game";
                 break;
             case stopwatchCode:
                 //Stopwatch
-                ret = "Stopwatch";
+                ret = "Stopwatch Game";
                 break;
             default:
                 //Mondhaha Game
-                ret = "Mond haha";
+                ret = "Mond haha forever~!~";
                 break;
         }
         return ret;

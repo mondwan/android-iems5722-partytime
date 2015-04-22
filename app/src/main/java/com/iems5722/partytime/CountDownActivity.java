@@ -14,7 +14,6 @@ public class CountDownActivity extends PortraitOnlyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_count_down);
 
-
         cdView = (TextView) this.findViewById(R.id.cdViewer);
 
         // @TODO Be progress loading for game clients sync
@@ -23,11 +22,11 @@ public class CountDownActivity extends PortraitOnlyActivity {
             public void onTick(long millisUntilFinished) {
 //                cdView.setText("" + millisUntilFinished / 1000);
                 if (((int) millisUntilFinished / 1000) == 3) {
-                    cdView.setText("GET!!");
+                    cdView.setText("GET!! SET ~~");
                 } else if (((int) millisUntilFinished / 1000) == 2) {
-                    cdView.setText("SeTTTTTT~~~");
-                } else if (((int) millisUntilFinished / 1000) == 1) {
                     cdView.setText("Ready to GO??!!");
+                } else if (((int) millisUntilFinished / 1000) == 1) {
+                    cdView.setText("Next Game is: " + GameSequenceActivity.getButtonText());
                 }
             }
 

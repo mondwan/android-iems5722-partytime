@@ -22,7 +22,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
     int score = 0;
 
     private void scoreUpdate(int diff) {
-        score = scoresUtils.ScoresUpdate(diff);
+        score = scoresUtils.scoresUpdate(diff);
 
     }
 

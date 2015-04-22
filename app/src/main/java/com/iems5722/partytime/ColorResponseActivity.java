@@ -13,8 +13,8 @@ import java.util.Random;
 
 
 public class ColorResponseActivity extends PortraitOnlyActivity {
-    final String TAG = "ColorResponse";
-    protected GameController gameController = null;
+    private static final String TAG = ColorResponseActivity.class.getClass().getSimpleName();
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
     final int gameTime = 20;
 
     Button redButton, blueButton, greenButton;
@@ -74,28 +74,7 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     }
 
     private void scoreUpdate(int diff) {
-        score += diff;
-        this.gameController = GameController.getInstance();
-        final GameController.UpdateScoresRequest req = new GameController.UpdateScoresRequest();
-        final GameController.UpdateScoresResponse res = new GameController.UpdateScoresResponse();
-        if (gameController.isHost()){
-            GamePlayer player = gameController.getGamePlayer(gameController.localIP);
-            res.scores = player.getScores() + diff;
-            res.requestIP = gameController.localIP;
-            res.serverIP = gameController.getServerIP();
-            gameController.sendMsg(res);
-            gameController.setGamePlayerScores(res.serverIP,res.scores);
-            Log.d(TAG, String.format("Scores Update(Server self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
-        }
-        else{
-            GamePlayer player = gameController.getGamePlayer(gameController.localIP);
-            req.scores = player.getScores() + diff;
-            req.requestIP = gameController.localIP;
-            gameController.sendMsg(req);
-            gameController.setGamePlayerScores(req.requestIP,req.scores);
-            Log.d(TAG, String.format("Scores Update(Client self): Player |%s|, Scores|%s|", player.getUsername(), player.getScores()));
-        }
-
+        score = scoresUtils.scoresUpdate(diff);
     }
 
     private Boolean checkColorCorrect(int color) {

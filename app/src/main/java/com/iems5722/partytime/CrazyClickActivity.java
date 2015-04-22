@@ -29,6 +29,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
     Boolean isFinish = false;
     int score = 0;
 
+    // Instance
     ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
     private void scoreUpdate(int diff) {

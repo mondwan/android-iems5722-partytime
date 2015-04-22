@@ -16,19 +16,21 @@ import java.util.Random;
 
 public class StopwatchActivity extends PortraitOnlyActivity {
     final String TAG = "Stopwatch";
-    protected GameController gameController = null;
-    ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
+    // GUI
     TextView timeView, scoreView, instructionView;
     Button stopButton;
-
     TextView p1ScoreView, p2ScoreView
             , p3ScoreView, p4ScoreView;
 
+    // Game Var
     final int BUFFER_TIME = 5000;
     int targetTime = 5000; // in millis second
-
     int score = 0;
+
+    // Instance
+    protected GameController gameController = null;
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
     private float getRemainTime(long untilFinished) {
         return (float) (targetTime - untilFinished + BUFFER_TIME) / 1000;
@@ -130,11 +132,8 @@ public class StopwatchActivity extends PortraitOnlyActivity {
                 finish();
             }
         });
-
-
         cdtimer.start();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -15,11 +15,12 @@ import java.util.Random;
 
 public class ColorResponseActivity extends PortraitOnlyActivity {
     private static final String TAG = ColorResponseActivity.class.getClass().getSimpleName();
-    ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
     // GUI
     Button redButton, blueButton, greenButton;
     TextView displayView, timeView, scoreView;
+    TextView p1ScoreView, p2ScoreView
+            , p3ScoreView, p4ScoreView;
 
     // Game Flow
     Boolean isFinish = false;
@@ -32,9 +33,8 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     int correctCounter = 0;
     int incorrectCounter = 0;
 
-    // TOCOPY
-    TextView p1ScoreView, p2ScoreView
-            , p3ScoreView, p4ScoreView;
+    // Instance
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
     final String COLOR_TEXT[] = new String[] {
       "RED", "GREEN", "BLUE"

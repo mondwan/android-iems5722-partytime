@@ -13,19 +13,23 @@ import java.util.ArrayList;
 
 public class CrazyClickActivity extends PortraitOnlyActivity {
     private static final String TAG = CrazyClickActivity.class.getClass().getSimpleName();
-    ScoresUtils scoresUtils = new ScoresUtils(TAG);
-    final int gameTime = 10;
 
+    // GUI
     Button crazyButton;
     TextView counterView;
     TextView timeView;
+    TextView p1ScoreView, p2ScoreView
+            , p3ScoreView, p4ScoreView;
 
+    // Game Var
+    final int gameTime = 5;
+    final int scoreRate = 4;
+
+    // Game Flow
     Boolean isFinish = false;
     int score = 0;
 
-    // TOCOPY
-    TextView p1ScoreView, p2ScoreView
-            , p3ScoreView, p4ScoreView;
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
     private void scoreUpdate(int diff) {
         score = scoresUtils.scoresUpdate(diff);
@@ -65,7 +69,7 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
             @Override
             public void onClick(View v) {
                 if (!isFinish) {
-                    scoreUpdate(1);
+                    scoreUpdate(scoreRate);
                     counterView.setText(Integer.toString(score));
                 }
             }

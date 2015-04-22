@@ -17,16 +17,23 @@ import java.util.Random;
 public class PatternActivity extends PortraitOnlyActivity {
 
     private static final String TAG = PatternActivity.class.getClass().getSimpleName();
-    ScoresUtils scoresUtils = new ScoresUtils(TAG);
+
+    // GUI
     TextView p1ScoreView, p2ScoreView
             , p3ScoreView, p4ScoreView;
-    final int gameTime = 10;
-
     TextView scoreView, timeView, instructionView;
     ImageButton up, down, left, right;
 
-    final int maxArrowSize = 5;
+    // Game Var
+    final int minArrowSize = 3;
+    final int bufArrowSize = 3;
+    final int gameTime = 20;
+    final int scoreRate = 10;
     int score = 0;
+    int targetArrowSize = 0;
+
+    // Instance
+    ScoresUtils scoresUtils = new ScoresUtils(TAG);
     ArrayList<String> targetArray = new ArrayList<String>();
     Boolean isFinish = false;
 
@@ -59,7 +66,9 @@ public class PatternActivity extends PortraitOnlyActivity {
 
     private void genAndSetArrow() {
         targetArray.clear();
-        for (int i = 0; i < maxArrowSize; i++) {
+        targetArrowSize = new Random().nextInt(minArrowSize) + bufArrowSize;
+
+        for (int i = 0; i < targetArrowSize ; i++) {
             String newColor = genRandomArrow();
             while (i > 0 && newColor == targetArray.get(i - 1)) {
                 newColor = genRandomArrow();
@@ -86,9 +95,9 @@ public class PatternActivity extends PortraitOnlyActivity {
         Boolean ret = false;
         if (targetArray.get(checkCounter).equals(arrow)) {
             checkCounter++;
-            if (checkCounter == maxArrowSize) {
+            if (checkCounter == targetArrowSize) {
                 // success one
-                scoreUpdate(1);
+                scoreUpdate(scoreRate);
                 scoreView.setText(Integer.toString(score));
 
                 // reinit
@@ -98,7 +107,7 @@ public class PatternActivity extends PortraitOnlyActivity {
             }
             return true;
         } else {
-            scoreUpdate(-1);
+            scoreUpdate(scoreRate * -1 / 2);
             scoreView.setText(Integer.toString(score));
 
             // reinit

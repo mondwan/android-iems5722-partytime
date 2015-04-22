@@ -1,21 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context=".HomeActivity">
-
-    <TextView
-        android:text="@string/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/appName"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+    tools:context=".HomeActivity">
 
     <Button
         android:layout_width="wrap_content"
@@ -23,16 +10,15 @@
         android:text="@string/host_button"
         android:id="@+id/hostButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp"/>
+        android:layout_below="@+id/crazyClickButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/join_button"
         android:id="@+id/joinButton"
-        android:layout_below="@+id/hostButton"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/colorResponse" />
 
     <Button
         android:layout_width="wrap_content"
@@ -67,9 +53,10 @@
         android:layout_height="wrap_content"
         android:text="PATTERN GAME"
         android:id="@+id/patternButton"
-        android:layout_below="@+id/colorResponse"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:layout_below="@+id/joinButton"
+        android:layout_alignLeft="@+id/colorResponse"
+        android:layout_alignStart="@+id/colorResponse" />
 
     <Button
         android:layout_width="wrap_content"
@@ -79,6 +66,18 @@
         android:layout_below="@+id/patternButton"
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:background="@mipmap/partytime"
+        android:layout_alignBottom="@+id/crazyClickButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

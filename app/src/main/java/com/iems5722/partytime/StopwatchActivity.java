@@ -93,7 +93,6 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         final CountDownTimer cdtimer = new CountDownTimer(targetTime + BUFFER_TIME, 10) {
 
             public void onTick(long millisUntilFinished) {
-
                 String timeShow = String.format("%.3f", getRemainTime(millisUntilFinished));
                 setCurrentTime(timeShow);
 

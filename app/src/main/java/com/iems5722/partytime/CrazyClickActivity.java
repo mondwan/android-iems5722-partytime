@@ -1,6 +1,7 @@
 package com.iems5722.partytime;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -76,8 +77,10 @@ public class CrazyClickActivity extends PortraitOnlyActivity {
             }
         });
 
+
         // Game Start
         new CountDownTimer(gameTime * 1000, 1000) {
+
 
             public void onTick(long millisUntilFinished) {
                 timeView.setText("Time remaining: " + millisUntilFinished / 1000);

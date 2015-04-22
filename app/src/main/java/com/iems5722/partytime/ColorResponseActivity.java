@@ -101,10 +101,15 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     private void setScoreTable() {
         ArrayList<String> scoreList = scoresUtils.getSortedScoreText();
         // p1
-        p1ScoreView.setText(scoreList.get(0));
-        p2ScoreView.setText(scoreList.get(1));
-        p3ScoreView.setText(scoreList.get(2));
-        p4ScoreView.setText(scoreList.get(3));
+        try {
+            p1ScoreView.setText(scoreList.get(0));
+            p2ScoreView.setText(scoreList.get(1));
+            p3ScoreView.setText(scoreList.get(2));
+            p4ScoreView.setText(scoreList.get(3));
+        } catch (Exception e) {
+            // something overflow
+        }
+
     }
 
     @Override

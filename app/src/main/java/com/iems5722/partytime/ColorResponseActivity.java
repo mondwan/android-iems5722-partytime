@@ -18,10 +18,16 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
     ScoresUtils scoresUtils = new ScoresUtils(TAG);
     final int gameTime = 20;
 
+    // GUI
     Button redButton, blueButton, greenButton;
     TextView displayView, timeView, scoreView;
+
+    // Game Flow
     Boolean isFinish = false;
     int targetColor = Color.RED;
+
+    // Game Var
+    final int scoreRate = 9;
     int score = 0;
     int correctCounter = 0;
     int incorrectCounter = 0;
@@ -87,11 +93,11 @@ public class ColorResponseActivity extends PortraitOnlyActivity {
         if (targetColor == color) {
             correctCounter++;
             genAndSetColor();
-            scoreUpdate(1);
+            scoreUpdate(scoreRate);
             ret = true;
         } else {
             incorrectCounter++;
-            scoreUpdate(-1);
+            scoreUpdate(scoreRate * -1 / 2);
             ret = false;
         }
         scoreView.setText("Score: " + Integer.toString(score));

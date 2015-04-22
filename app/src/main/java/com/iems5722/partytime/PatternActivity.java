@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class PatternActivity extends PortraitOnlyActivity {
     final int gameTime = 10;
 
     TextView scoreView, timeView, instructionView;
-    Button upButton, downButton, leftButton, rightButton;
+    ImageButton up, down, left, right;
 
     final int maxArrowSize = 5;
     int score = 0;
@@ -108,7 +109,7 @@ public class PatternActivity extends PortraitOnlyActivity {
         }
     }
 
-    private void buttonChangeBG(final Button button, final Boolean flag) {
+    private void buttonChangeBG(final ImageButton button, final Boolean flag) {
         new CountDownTimer(100, 10) {
 
             public void onTick(long millisUntilFinished) {
@@ -120,7 +121,7 @@ public class PatternActivity extends PortraitOnlyActivity {
             }
 
             public void onFinish() {
-                button.setBackgroundColor(Color.LTGRAY);
+                button.setBackgroundColor(Color.TRANSPARENT);
             }
         }.start();
     }
@@ -145,14 +146,10 @@ public class PatternActivity extends PortraitOnlyActivity {
         timeView = (TextView) this.findViewById(R.id.timeView);
         instructionView = (TextView) this.findViewById(R.id.instructionView);
 
-        upButton = (Button) this.findViewById(R.id.upButton);
-        upButton.setBackgroundColor(Color.LTGRAY);
-        downButton = (Button) this.findViewById(R.id.downButton);
-        downButton.setBackgroundColor(Color.LTGRAY);
-        leftButton = (Button) this.findViewById(R.id.leftButton);
-        leftButton.setBackgroundColor(Color.LTGRAY);
-        rightButton = (Button) this.findViewById(R.id.rightButton);
-        rightButton.setBackgroundColor(Color.LTGRAY);
+        up = (ImageButton) this.findViewById(R.id.up);
+        down = (ImageButton) this.findViewById(R.id.down);
+        left = (ImageButton) this.findViewById(R.id.left);
+        right = (ImageButton) this.findViewById(R.id.right);
 
         p1ScoreView = (TextView) this.findViewById(R.id.p1ScoreView);
         p2ScoreView = (TextView) this.findViewById(R.id.p2ScoreView);
@@ -162,39 +159,39 @@ public class PatternActivity extends PortraitOnlyActivity {
         genAndSetArrow();
         showArrow();
 
-        upButton.setOnClickListener(new View.OnClickListener() {
+        up.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Boolean flag = checkInputArrow("up");
-                buttonChangeBG(upButton, flag);
+                buttonChangeBG(up, flag);
             }
         });
 
-        downButton.setOnClickListener(new View.OnClickListener() {
+        down.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Boolean flag = checkInputArrow("down");
-                buttonChangeBG(downButton, flag);
+                buttonChangeBG(down, flag);
             }
         });
 
-        leftButton.setOnClickListener(new View.OnClickListener() {
+        left.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Boolean flag = checkInputArrow("left");
-                buttonChangeBG(leftButton, flag);
+                buttonChangeBG(left, flag);
             }
         });
 
-        rightButton.setOnClickListener(new View.OnClickListener() {
+        right.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Boolean flag = checkInputArrow("right");
-                buttonChangeBG(rightButton, flag);
+                buttonChangeBG(right, flag);
             }
         });
 
@@ -209,10 +206,10 @@ public class PatternActivity extends PortraitOnlyActivity {
                 timeView.setText("Finish!");
                 isFinish = true;
                 scoreUpdate(0);
-                upButton.setOnClickListener(null);
-                downButton.setOnClickListener(null);
-                leftButton.setOnClickListener(null);
-                rightButton.setOnClickListener(null);
+                up.setOnClickListener(null);
+                down.setOnClickListener(null);
+                left.setOnClickListener(null);
+                right.setOnClickListener(null);
 
                 // return score
                 Intent output = new Intent();

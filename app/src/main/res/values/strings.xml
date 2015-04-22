@@ -34,7 +34,7 @@
 
     <!--ColorResponseActivity-->
     <string name="title_activity_game_sequence">GameSequenceActivity</string>
-    <string name="next_game">Click to Start Next Game!</string>
+    <string name="next_game">Click to Start!</string>
     <string name="wait_for_host">Waiting for host</string>
     <string name="end_game">The end of the game</string>
 

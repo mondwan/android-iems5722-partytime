@@ -22,10 +22,13 @@ public class CountDownActivity extends PortraitOnlyActivity {
             public void onTick(long millisUntilFinished) {
 //                cdView.setText("" + millisUntilFinished / 1000);
                 if (((int) millisUntilFinished / 1000) == 3) {
+                    cdView.setTextSize(40);
                     cdView.setText("GET!! SET ~~");
                 } else if (((int) millisUntilFinished / 1000) == 2) {
+                    cdView.setTextSize(40);
                     cdView.setText("Ready to GO??!!");
                 } else if (((int) millisUntilFinished / 1000) == 1) {
+                    cdView.setTextSize(20);
                     cdView.setText("Next Game is: " + GameSequenceActivity.getButtonText());
                 }
             }

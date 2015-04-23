@@ -239,6 +239,33 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
         return ret;
     }
 
+    public static String getGameDescrText() {
+        String ret = "";
+        switch (gameIndex - 1) {
+            case crazyGameCode:
+                //CrazyClick
+                ret = "Finger clicking: Click the button as much as you can !!";
+                break;
+            case colorResponseCode:
+                //ColorResponse
+                ret = "Color confustion: Choose what is the color of the Text ?";
+                break;
+            case patternCode:
+                //Pattern
+                ret = "Recognition: Follow the direction to input arrows !!";
+                break;
+            case stopwatchCode:
+                //Stopwatch
+                ret = "Accuracy: Try to stop close to the target time";
+                break;
+            default:
+                //Mondhaha Game
+                ret = "Mond haha forever~!~";
+                break;
+        }
+        return ret;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 public class CountDownActivity extends PortraitOnlyActivity {
 
-    TextView cdView;
+    TextView cdView, descView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,6 +15,7 @@ public class CountDownActivity extends PortraitOnlyActivity {
         setContentView(R.layout.activity_count_down);
 
         cdView = (TextView) this.findViewById(R.id.cdViewer);
+        descView = (TextView) this.findViewById(R.id.descView);
 
         // @TODO Be progress loading for game clients sync
         new CountDownTimer(4000, 1000) {
@@ -30,6 +31,7 @@ public class CountDownActivity extends PortraitOnlyActivity {
                 } else if (((int) millisUntilFinished / 1000) == 1) {
                     cdView.setTextSize(20);
                     cdView.setText("Next Game is: " + GameSequenceActivity.getButtonText());
+                    descView.setText(GameSequenceActivity.getGameDescrText());
                 }
             }
 

@@ -316,6 +316,7 @@ public class GameSequenceActivity extends PortraitOnlyActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //requestCode == crazyGameRequestCode &&
+        scoresUtils.scoresUpdate(0);
         if (resultCode == RESULT_OK && data != null) {
 //            int score = data.getIntExtra(SCORE_CODE, 100);
             this.gameController = GameController.getInstance();

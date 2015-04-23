@@ -8,14 +8,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 
 public class HomeActivity extends PortraitOnlyActivity {
     private static final String TAG = HomeActivity.class.getClass().getSimpleName();
-
 
     protected WifiManager wm;
 
@@ -27,6 +33,9 @@ public class HomeActivity extends PortraitOnlyActivity {
     protected class SetupGameServerException extends Exception {
     }
 
+    // Magic number define the wifi ap status
+    // private final static int WIFI_AP_DISABLED = 1;
+    private final static int WIFI_AP_ENABLED = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +219,30 @@ public class HomeActivity extends PortraitOnlyActivity {
                 (ipAddress >> 24 & 0xff)
         );
 
+        try {
+            // We are not able to get IP via wireless manager
+            if (ret.equals("0.0.0.0")) {
+                Enumeration<NetworkInterface> en;
+                Enumeration<InetAddress> enumIpAddr;
+                for (en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                    NetworkInterface intf = en.nextElement();
+                    // TODO: Name of virtual interfaces varied over devices
+                    if (intf.getName().contains("wlan")) {
+                        for (enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                            InetAddress inetAddress = enumIpAddr.nextElement();
+                            if (!inetAddress.isLoopbackAddress()
+                                    && (inetAddress.getAddress().length == 4)) {
+                                Log.d(TAG, inetAddress.getHostAddress());
+                                ret = inetAddress.getHostAddress();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            Log.e(TAG, e.toString());
+        }
+
         return ret;
     }
 
@@ -218,7 +251,9 @@ public class HomeActivity extends PortraitOnlyActivity {
      */
     protected boolean checkWifiAvailability() {
         NetworkInfo networkInfo = this.cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        boolean ret = this.wm.isWifiEnabled() && networkInfo.isConnected();
+        boolean ret =
+                this.getWifiApState() ||
+                        (this.wm.isWifiEnabled() && networkInfo.isConnected());
 
         if (!ret) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -245,7 +280,42 @@ public class HomeActivity extends PortraitOnlyActivity {
                         }
                     }
             );
+            dialog.setNeutralButton("I am hotspot", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    HomeActivity self = HomeActivity.this;
+
+                    boolean ret = self.getWifiApState();
+
+                    if (!ret) {
+                        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                    }
+                }
+            });
             dialog.show();
+        }
+
+        return ret;
+    }
+
+    protected boolean getWifiApState() {
+        boolean ret;
+        try {
+            Method method = this.wm.getClass().getMethod("getWifiApState");
+
+            int tmp = ((Integer)method.invoke(this.wm));
+
+            // Fix for Android 4
+            if (tmp >= 10) {
+                tmp = tmp - 10;
+            }
+
+            Log.d(TAG, String.format("tmp = |%d|", tmp));
+
+            ret = tmp == WIFI_AP_ENABLED;
+        } catch (Exception e) {
+            Log.e(this.getClass().toString(), "", e);
+            ret = false;
         }
 
         return ret;

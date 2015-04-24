@@ -27,8 +27,8 @@ public class GameServer {
     protected String serverIP;
 
     // Define ports we are going to setup a server
-    protected static final int tcpPort = 54555;
-    protected static final int udpPort = 54777;
+    public static final int tcpPort = 54555;
+    public static final int udpPort = 54777;
 
     // Define local machine is the host or not
     protected boolean isHost = false;
@@ -50,14 +50,6 @@ public class GameServer {
 
     public String getServerIP() {
         return serverIP;
-    }
-
-    public int getTcpPort() {
-        return tcpPort;
-    }
-
-    public int getUdpPort() {
-        return udpPort;
     }
 
     public void setServerIP(String serverIP) {

@@ -524,10 +524,17 @@ public class GameController {
         }
     }
 
+    /**
+     * API for activities to send out gameData
+     *
+     * @param gameData Specific data type of this data are runtime specific
+     */
     public void sendMsg(final Object gameData) {
+        // Setup a gameController reference
         final GameController self = GameController.this;
+
         if (this.isHost()) {
-            //server
+            // For server, it should be a broadcast message
             this.networkCallsThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -535,7 +542,7 @@ public class GameController {
                 }
             });
         } else {
-            //client
+            // For client, it should be an Unicast message
             this.networkCallsThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -655,7 +662,7 @@ public class GameController {
     /**
      * API fetches player instance by giving a ipv4
      *
-     * @param ipv4
+     * @param ipv4 The IP address of the player
      * @return GamePlayer
      */
     public GamePlayer getGamePlayer(String ipv4) {
@@ -671,8 +678,8 @@ public class GameController {
     /**
      * API update player scores by giving a ipv4
      *
-     * @param ipv4
-     * @param scores
+     * @param ipv4   The IP address of the player
+     * @param scores The scores of the player
      */
     public void setGamePlayerScores(String ipv4, int scores) {
         for (GamePlayer player : this.playerList) {
@@ -693,7 +700,7 @@ public class GameController {
     /**
      * API fetches player instance by giving a ipv4
      *
-     * @param ipv4
+     * @param ipv4 The IP address of the player
      * @return int
      */
     public int getPlayerPosition(String ipv4) {

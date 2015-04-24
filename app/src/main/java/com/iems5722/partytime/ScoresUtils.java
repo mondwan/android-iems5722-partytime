@@ -2,20 +2,19 @@ package com.iems5722.partytime;
 
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Created by chan on 4/22/2015.
+ * Define common methods for dealing with scoring
  */
 public class ScoresUtils {
 
     protected GameController gameController = null;
     private String TAG = "";
-    public ScoresUtils(String TAG){
+
+    public ScoresUtils(String TAG) {
         this.TAG = TAG;
     }
 
@@ -46,7 +45,7 @@ public class ScoresUtils {
         return scores;
     }
 
-    public ArrayList<GamePlayer> getPlayerList(){
+    public ArrayList<GamePlayer> getPlayerList() {
         gameController = GameController.getInstance();
         return gameController.getPlayerList();
     }
@@ -65,12 +64,8 @@ public class ScoresUtils {
 
         for (int i = 0; i < gamePlayers.size(); i++) {
             scoreList.add(gamePlayers.get(i).getUsername()
-                + ": " + gamePlayers.get(i).getScores());
+                    + ": " + gamePlayers.get(i).getScores());
         }
         return scoreList;
-    }
-
-    public int getMyScores(){
-        return scoresUpdate(0);
     }
 }

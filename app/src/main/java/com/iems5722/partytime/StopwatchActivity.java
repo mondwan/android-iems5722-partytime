@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,30 +16,44 @@ public class StopwatchActivity extends PortraitOnlyActivity {
     final String TAG = "Stopwatch";
 
     // GUI
-    TextView timeView, scoreView, instructionView;
-    Button stopButton;
-    TextView p1ScoreView, p2ScoreView
-            , p3ScoreView, p4ScoreView;
+    protected TextView timeView, scoreView, instructionView;
+    protected Button stopButton;
+    protected TextView p1ScoreView, p2ScoreView, p3ScoreView, p4ScoreView;
 
     // Game Var
-    final int BUFFER_TIME = 5000;
-    int targetTime = 5000; // in millis second
-    int score = 0;
+    protected static final int BUFFER_TIME = 5000; // in ms
+    protected static final int UPDATE_INTERVAL = 10; // in ms
+    protected static final int STOPWATCH_TIMER_UPPER_BOUND = 6; // in s
+    protected static final int STOPWATCH_TIMER_LOWER_BOUND = 3; // in s
+    protected static int targetTime; // in ms
+    protected int score = 0;
 
     // Instance
-    protected GameController gameController = null;
     ScoresUtils scoresUtils = new ScoresUtils(TAG);
 
-    private float getRemainTime(long untilFinished) {
+    /**
+     * Helper method calculates how much time left
+     *
+     * @param untilFinished milliseconds
+     * @return float
+     */
+    private float getTimeLeft(long untilFinished) {
         return (float) (targetTime - untilFinished + BUFFER_TIME) / 1000;
     }
 
-    private int initRandtime() {
-        int max = 6;
-        int min = 3;
+    /**
+     * Helper method generates a random stop time
+     *
+     * @return int milliseconds
+     */
+    private int getRandomStoptime() {
+        int max = STOPWATCH_TIMER_UPPER_BOUND;
+        int min = STOPWATCH_TIMER_LOWER_BOUND;
 
+        // Generate a random number between max and min
         Random random = new Random();
         targetTime = (random.nextInt(max - min) + min) * 1000;
+
         return targetTime;
     }
 
@@ -72,11 +83,13 @@ public class StopwatchActivity extends PortraitOnlyActivity {
             // something overflow
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
 
+        // Setup reference for our view element
         timeView = (TextView) this.findViewById(R.id.timeView);
         scoreView = (TextView) this.findViewById(R.id.scoreView);
         stopButton = (Button) this.findViewById(R.id.stopButton);
@@ -85,81 +98,88 @@ public class StopwatchActivity extends PortraitOnlyActivity {
         p2ScoreView = (TextView) this.findViewById(R.id.p2ScoreView);
         p3ScoreView = (TextView) this.findViewById(R.id.p3ScoreView);
         p4ScoreView = (TextView) this.findViewById(R.id.p4ScoreView);
-        // init
-        instructionView.setText("Try your best to stop close to: " + initRandtime() / 1000);
-        setScoreTable();
 
-        String timeShow = "";
-        final CountDownTimer cdtimer = new CountDownTimer(targetTime + BUFFER_TIME, 10) {
+        // Initialize stopwatch variable
+        instructionView.setText(
+                "Try your best to stop close to: " + getRandomStoptime() / 1000);
 
-            public void onTick(long millisUntilFinished) {
-                String timeShow = String.format("%.3f", getRemainTime(millisUntilFinished));
-                setCurrentTime(timeShow);
+        // Display scores for all players
+        this.setScoreTable();
 
-                int diffToTarget = Math.abs((int) (Float.parseFloat(getCurrentTime())*1000) - targetTime);
-                if (diffToTarget < 1000) timeView.setTextColor(Color.RED);
+        // Define a count down timer for updating our UI
+        final StopwatchActivity self = StopwatchActivity.this;
+        final CountDownTimer countDownTimer =
+                new CountDownTimer(targetTime + BUFFER_TIME, UPDATE_INTERVAL) {
+                    public void onTick(long millisUntilFinished) {
+                        // Calculate how much time left
+                        float timeLeft = self.getTimeLeft(millisUntilFinished);
 
-                timeView.setText("Time: " + timeShow);
-            }
+                        // Converts to string
+                        String timeShow = String.format("%.3f", timeLeft);
+                        setCurrentTime(timeShow);
 
-            public void onFinish() {
-                timeView.setText("End of World");
+                        int diffToTarget = Math.abs(
+                                (int) (Float.parseFloat(getCurrentTime()) * 1000) - targetTime);
+                        if (diffToTarget < 1000) timeView.setTextColor(Color.RED);
 
-                Intent output = new Intent();
-                score = 0;
-                output.putExtra(GameSequenceActivity.SCORE_CODE, score);
-                setResult(RESULT_OK, output);
-                finish();
-            }
-        };
+                        timeView.setText("Time: " + timeShow);
+                    }
+
+                    public void onFinish() {
+                        timeView.setText("End of World");
+
+                        Intent output = new Intent();
+
+                        // Return to GameSequence with score
+                        score = 0;
+                        output.putExtra(GameSequenceActivity.SCORE_CODE, score);
+                        setResult(RESULT_OK, output);
+
+                        // kill myself
+                        self.finish();
+                    }
+                };
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cdtimer.cancel();
+                // Stop timer
+                countDownTimer.cancel();
+
+                // Show time player stopping at
                 timeView.setText(getCurrentTime());
-                int diffToTarget = Math.abs((int) (Float.parseFloat(getCurrentTime())*1000) - targetTime);
+
+                // Calculate difference between target time and stopping time
+                final int diffToTarget = Math.abs(
+                        (int) (Float.parseFloat(getCurrentTime()) * 1000) - targetTime);
 
                 final int timeRatio = 500;
+
+                // Calculate player score
                 score = timeRatio - diffToTarget;
-                if (score < 0)
+                if (score < 0) {
                     score = 0;
-                else {
-                    score = (int) ((score * 100) / timeRatio);
+                } else {
+                    score = (score * 100) / timeRatio;
                 }
-                scoreUpdate(score);
+
+                // Update the player score
                 scoreView.setText("Score Board: " + score);
 
+                // Send message to server
+                scoreUpdate(score);
+
+                // Return to GameSequence with player score
                 Intent output = new Intent();
                 output.putExtra(GameSequenceActivity.SCORE_CODE, score);
                 setResult(RESULT_OK, output);
-                finish();
+
+                // kill myself
+                self.finish();
             }
         });
-        cdtimer.start();
+
+        // Start the stopwatch game
+        countDownTimer.start();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_stopwatch, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }
